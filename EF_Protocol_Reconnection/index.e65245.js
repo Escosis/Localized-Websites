@@ -73063,7 +73063,7 @@ var _global =
                                           for (;;)
                                             switch (t.n) {
                                               case 0:
-                                                t.n = 2;
+                                                t.n = 1; /* t.n = 2; */
                                                 break;
                                               case 1:
                                                 return (
@@ -73086,7 +73086,7 @@ var _global =
                                                   t.a(2)
                                                 );
                                               case 2:
-                                                Uh().then(function (t) {
+                                                /* Uh().then(function (t) {
                                                   var e;
                                                   if (0 === t.code && t.data) {
                                                     var o = !1;
@@ -73133,7 +73133,7 @@ var _global =
                                                           ),
                                                       });
                                                   }
-                                                });
+                                                }); */
                                               case 3:
                                                 return t.a(2);
                                             }
@@ -73149,7 +73149,7 @@ var _global =
                               (t.n = 2);
                             break;
                           case 2:
-                            for (
+                            /* for (
                               i = new URL(
                                 Ru.surveyLink.replace("{hashId}", r.hashId)
                               ),
@@ -73181,7 +73181,7 @@ var _global =
                             o.Bridge.getPlatform() === o.Platform.Unknown
                               ? window.open(i, "_blank")
                               : o.WebView.openMiniWebView(i.toString());
-                          case 4:
+                          case 4: */
                             return t.a(2);
                         }
                     }, t);
