@@ -1,6 +1,6 @@
 **Windows端用户可下载所有文件并以以下方法打开进行浏览：**
 
-# 方法一：在电脑浏览器中打开htm/html直接阅读，但需要禁用浏览器的CORS策略才可正常使用，否则将由于该策略限制无法访问资源文件。
+### 方法一：在电脑浏览器中打开htm/html直接阅读，但需要禁用浏览器的CORS策略才可正常使用，否则将由于该策略限制无法访问资源文件。
 
 **禁用方法一：**  
 在浏览器地址栏输入chrome://flags/或edge://flags/，搜索CORS找到Block insecure private network requests.这个选项，改为Disabled，重启浏览器。
@@ -21,4 +21,4 @@ start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --disabl
 ```
 然后可使用BatToExeConverter转为exe并设置为htm/html的打开方式，之后直接点开即可
 
-# 方法二：启动一个本地服务器，从中访问htm/html
+### 方法二：启动一个本地服务器，从中访问htm/html
