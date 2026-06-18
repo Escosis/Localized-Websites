@@ -1,0 +1,24 @@
+{
+    "code": 0,
+    "data": {
+        "rewards": [
+            {
+                "itemId": "item_diamond",
+                "count": 500
+            },
+            {
+                "itemId": "item_expcard_stage1_high",
+                "count": 10
+            },
+            {
+                "itemId": "item_weapon_expcard_high",
+                "count": 10
+            },
+            {
+                "itemId": "item_gold",
+                "count": 45000
+            }
+        ]
+    },
+    "msg": ""
+}
