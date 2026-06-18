@@ -1,0 +1,14 @@
+<!doctype html><html xmlns="http://www.w3.org/1999/xhtml"><head><meta charset="UTF-8"><meta http-equiv="pragma" content="no-cache"><meta http-equiv="cache-control" content="no-cache"><meta name="applicable-device" content="mobile"><meta name="renderer" content="webkit"><meta name="force-rendering" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="Copyright" content="miHoYo"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="email=no"/><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-status-bar-style" content="black-translucent"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link id="icon" rel="shortcut icon" href="favicon.ico"/><meta name="Description" content=""><meta name="Keywords" content=""><script defer="defer" src="config_d442b933.js"></script><script defer="defer" src="main_c2e1cf55.js"></script><link href="main_aafb3c7a.css" rel="stylesheet"></head><body><div id="app"></div><script src="main.js"></script><script src="vue.min.js"></script><script>Sentry.init({
+        dsn: 'https://2d2044ee9ba34d41b1deb282529024b0@sentry.mihoyo.com/9',
+        integrations: [
+          new Sentry.Integrations.Vue({Vue: Vue, attachProps: true, logErrors: true}),
+        ],
+        ignoreErrors: [
+          'The play() request was interrupted',
+          'The operation was aborted',
+          '$ is not defined',
+          'mihoyo-event-dialog-cancel',
+          "play() failed because the user didn't interact with the document first",
+          'The play method is not allowed by the user agent or the platform in the current context'
+        ]
+      });</script></body></html>
