@@ -42723,7 +42723,7 @@
                                             "/batch_event"
                                           ),
                                           {
-                                            method: "POST",
+                                            method: "GET", // "POST"
                                             mode: "cors",
                                             cache: "no-cache",
                                             credentials: "omit",
@@ -49095,7 +49095,7 @@
                         var e = !1,
                           t = new Request(jn.origin, {
                             body: new ReadableStream(),
-                            method: "POST",
+                            method: "GET", // "POST"
                             get duplex() {
                               return (e = !0), "half";
                             },
@@ -49183,7 +49183,7 @@
                                                         (n = new Request(
                                                           jn.origin,
                                                           {
-                                                            method: "POST",
+                                                            method: "GET", // "POST"
                                                             body: t,
                                                           }
                                                         )),
@@ -49341,7 +49341,7 @@
                                         break;
                                       }
                                       (w = new Request(r, {
-                                        method: "POST",
+                                        method: "GET", // "POST"
                                         body: i,
                                         duplex: "half",
                                       })),
@@ -62975,7 +62975,7 @@
                                           (t.n = 1),
                                           v.request({
                                             data: lh({}, o || r.current),
-                                            method: "POST",
+                                            method: "GET", // "POST"
                                             url: e,
                                           })
                                         );
