@@ -5323,7 +5323,7 @@
           (Or = async function (t) {
             return (
               E.dataSize(t, 63),
-              fetch(`${L(this, hr, "f")}/batch_event`, {
+              fetch(`${L(this, hr, "f")}batch_event`, {
                 method: "GET", // "POST"
                 mode: "cors",
                 cache: "no-cache",
