@@ -1,0 +1,128 @@
+[
+  {
+    "id": "com.roothide.BootStrap",
+    "title": "NekoJB",
+    "version": "1.2.1",
+    "icon": "assets/BootStrap.png",
+    "get_link": "https://github.com/roothide/Bootstrap/releases/download/1.2.1/Bootstrap.tipa"
+  },
+  {
+    "id": "com.ps.TrollLEDs",
+    "title": "TrollLEDs",
+    "version": "1.8.0",
+    "icon": "assets/TrollLEDs.png",
+    "get_link": "https://github.com/PoomSmart/TrollLEDs/releases/download/1.8.0/TrollLEDs.tipa"
+  },
+  {
+    "id": "com.opa334.Dopamine",
+    "title": "Dopamine",
+    "version": "Latest",
+    "icon": "assets/Dopamine.png",
+    "get_link": "https://github.com/opa334/Dopamine/releases/latest/download/Dopamine.ipa"
+  },
+  {
+    "id": "com.fiore.trolldecrypt",
+    "title": "TrollDecrypt",
+    "version": "1.1",
+    "icon": "assets/TrollDecrypt.jpg",
+    "get_link": "https://github.com/donato-fiore/TrollDecrypt/releases/download/v1.1/TrollDecrypt.tipa"
+  },
+  {
+    "id": "net.sourceloc.TrollTools",
+    "title": "TrollTools",
+    "version": "3.0",
+    "icon": "assets/default.png",
+    "get_link": "https://github.com/sourcelocation/TrollTools/releases/download/3.0/TrollTools.tipa"
+  },
+  {
+    "id": "net.sourceloc.AirTroller",
+    "title": "AirTroller",
+    "version": "1.1.1",
+    "icon": "assets/AirTroller.png",
+    "get_link": "https://github.com/sourcelocation/AirTroller/releases/download/1.1.1/AirTroller-1.1.1.tipa"
+  },
+  {
+    "id": "com.tigisoftware.Filza",
+    "title": "Filza",
+    "version": "4.0",
+    "icon": "assets/Filza.jpg",
+    "get_link": "https://tigisoftware.com/download/Filza_4.0.0.ipa"
+  },
+  {
+    "id": "net.sourceloc.evyrest",
+    "title": "Evyrest",
+    "version": "1.0",
+    "icon": "assets/Evyrest.png",
+    "get_link": "https://github.com/sourcelocation/Evyrest/releases/download/0.1/Evyrest-0.1.tipa"
+  },
+  {
+    "id": "ru.domo.cocoatop64",
+    "title": "CocoaTop",
+    "version": "1.0",
+    "icon": "assets/CocoaTop.png",
+    "get_link": "https://raw.githubusercontent.com/baziex/TrollStoreApps/main/TrollStoreApps/CocoaTopTS_BZ.ipa"
+  },
+  {
+    "id": "org.resonance.store",
+    "title": "TrollApps",
+    "version": "2.1",
+    "icon": "assets/TrollApps.png",
+    "get_link": "https://github.com/TheResonanceTeam/TrollApps/releases/download/2.1/org.resonance.store_TrollApps_2.1.ipa"
+  },
+  {
+    "id": "jp.meowbrek2.beta.troll",
+    "title": "meow",
+    "version": "1.1.7-beta",
+    "icon": "assets/default.png",
+    "get_link": "https://kok3shidoll.github.io/download/secret/8F38F948-BCF6-46AF-8926-C95D823107B0/meowbrek2_1.1.7_TS.tipa"
+  },
+  {
+    "id": "me.soongyu.mugunghwautil",
+    "title": "Mugunghwa",
+    "version": "3.0.2",
+    "icon": "assets/Mugunghwa.jpg",
+    "get_link": "https://github.com/s8ngyu/Mugunghwa/releases/download/3.0.2/Mugunghwa.tipa"
+  },
+  {
+    "id": "net.sourceloc.Picasso",
+    "title": "Picasso v3",
+    "version": "3.1",
+    "icon": "assets/Picasso.png",
+    "get_link": "https://github.com/sourcelocation/Picasso-v3/releases/download/3.1/Picasso.v3.1.ipa"
+  },
+  {
+    "id": "com.cokepokes.AppStorePlus",
+    "title": "AppStore++",
+    "version": "1.0.3",
+    "icon": "assets/AppStorePlus.jpg",
+    "get_link": "https://github.com/CokePokes/AppStorePlus-TrollStore/releases/download/v1.2-1/AppStore++_TrollStore_v1.0.3-2.ipa"
+  },
+  {
+    "id": "com.tigisoftware.ADManager",
+    "title": "AppsManager",
+    "version": "1.8",
+    "icon": "assets/AppsManager.jpg",
+    "get_link": "https://tigisoftware.com/download/AppsManager_1.8.4.ipa"
+  },
+  {
+    "id": "com.roothide.BootStrap",
+    "title": "Bootstrap",
+    "version": "1.2.1",
+    "icon": "assets/BootStrap.png",
+    "get_link": "https://github.com/roothide/Bootstrap/releases/download/1.2.1/Bootstrap.tipa"
+  },
+  {
+    "id": "pisshill.usprebooter",
+    "title": "Serotonin",
+    "version": "1.2.1",
+    "icon": "assets/Serotonin.png",
+    "get_link": "https://github.com/mineek/Serotonin/releases/download/1.2.1/Serotonin.tipa"
+  },
+  {
+    "id": "live.cclerc.geranium",
+    "title": "Geranium",
+    "version": "1.1",
+    "icon": "assets/Geranium.png",
+    "get_link": "https://github.com/c22dev/Geranium/releases/download/1.1/Geranium.tipa"
+  }
+]

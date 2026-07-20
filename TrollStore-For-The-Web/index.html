@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" class="ios ios-translucent-bars ios-translucent-modals device-pixel-ratio-2 device-ios ios">
+
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+   <title>TrollStore</title>
+   <link rel="stylesheet" href="./cdn.jsdelivr.net/npm/framework7@8.3.0/framework7-bundle.min.css">
+   <link rel="stylesheet" href="css/styles.css">
+   <link rel="stylesheet" href="./cdn.jsdelivr.net/npm/framework7-icons@5.0.5/css/framework7-icons.css">
+   <link rel="apple-touch-icon" href="assets/favicon.ico" id="favicon">
+   <link rel="icon" href="assets/favicon.ico">
+</head>
+
+<body>
+   <div id="app">
+      <div class="view view-main">
+         <div class="page" data-name="home">
+            <div class="navbar">
+               <div class="navbar-bg">
+               </div>
+               <div class="navbar-inner">
+                  <div class="left">
+                  </div>
+                  <div class="title">Apps</div>
+                  <div class="right">
+                  </div>
+               </div>
+            </div>
+            <div class="toolbar tabbar tabbar-icons toolbar-bottom">
+               <div class="toolbar-inner">
+                  <a href="#tab-3" class="tab-link tab-link-active" data-tab-title="Apps">
+                     <i class="icon f7-icons">square_stack_3d_up_fill</i>
+                     <span class="tabbar-label">Apps</span>
+                  </a>
+                  <a href="#tab-4" class="tab-link" data-tab-title="Settings">
+                     <i class="icon f7-icons">gear</i>
+                     <span class="tabbar-label">Settings</span>
+                  </a>
+               </div>
+            </div>
+            <div class="tabs">
+               <div id="tab-3" class="page-content tab tab-active">
+                  <form class="searchbar searchbar-init" data-search-container=".virtual-list" data-search-item="li" data-search-in=".item-title">
+                     <div class="searchbar-inner">
+                        <div class="searchbar-input-wrap">
+                           <input type="search" placeholder="Search" style="border-radius:11px">
+                           <i class="searchbar-icon"></i>
+                           <span class="input-clear-button">
+                           </span>
+                        </div>
+                        <span class="searchbar-disable-button color-blue">Cancel</span>
+                     </div>
+                  </form>
+                  <div class="list list-strong list-dividers media-list virtual-list app-list no-chevron" id="popup_list">
+                     <ul id="app_list" style="background-color:transparent">
+                     </ul>
+                  </div>
+               </div>
+               <div id="tab-4" class="page-content tab">
+                  <div class="block-title" style="font-size:13px;color:grey">UTILITIES</div>
+                  <div class="list list-strong media-list inset no-chevron list-dividers" style="font-size:auto;color:#3e84f7">
+                     <ul>
+                        <li>
+                           <a href="itms-services://?action=download-manifest&url=https://gitlab.com/Forelps/respring/-/raw/main/app.plist" class="item-link item-content external">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title">Respring</div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                        <li>
+                           <a onclick="troll()" class="item-link item-content">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title">Rebuild Icon cache</div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px;color:grey">If an app does not immediately appear after installation, respring here and it should appear afterwards.</p>
+                  </div>
+                  <div class="block-title" style="font-size:13px;color:grey">SIGNING</div>
+                  <div class="list list-strong media-list inset no-chevron">
+                     <ul>
+                        <li>
+                           <a class="item-content">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title" style="font-size:auto;color:grey">Idid: Installed (v2.1.5-procursus7-new)</div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px;color:grey">Idid is installed and allows TrollStore to install unsigned IPA files.</p>
+                  </div>
+                  <div class="block-title" style="font-size:13px;color:grey">PERSISTENCE</div>
+                  <div class="list list-strong media-list inset no-chevron list-dividers">
+                     <ul>
+                        <li>
+                           <a class="item-content">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title" style="font-size:auto;color:grey">Helper Installed into Tips</div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                        <li>
+                           <a onclick="troll()" class="list-button color-red">Uninstall Persistence Helper</a>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px;color:grey">When iOS rebuilds the icon cache, all TrollStore apps including TrollStore itself will be reverted to "User" state and either disappear or no longer launch. If that happens, you can use the persistence helper installed into Tips to refresh the app registrations, which will make them work again.</p>
+                  </div>
+                  <div class="block-title" style="font-size:13px;color:grey">SECURITY</div>
+                  <div class="list media-list list-strong inset list-dividers">
+                     <ul>
+                        <li>
+                           <div class="item-content">
+                              <div class="item-inner">
+                                 <div class="item-title">URL Scheme Enabled</div>
+                                 <div class="item-after" style="position:absolute;right:16px;top:50%;transform:translateY(-50%)">
+                                    <label class="toggle toggle-init">
+                                       <input type="checkbox">
+                                       <span class="toggle-icon">
+                                       </span>
+                                    </label>
+                                 </div>
+                              </div>
+                           </div>
+                        </li>
+                        <li>
+                           <a id="conf-alert-entry" class="item-link item-content">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title">Show Install Confirmation Alert</div>
+                                    <div class="item-after" id="conf-alert-current-value" style="color:gray">Ask</div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px;color:grey">The URL Scheme, when enabled, will allow apps and websites to trigger TrollStore installations through the apple-magnifier://install?url=
+                        <IPA_URL>URL scheme and enable JIT through the apple-magnifier://enable-jit?bundle-id=
+                           <BUNDLE_ID>URL scheme.</p>
+                  </div>
+                  <div class="list list-strong media-list inset list-dividers">
+                     <ul>
+                        <li>
+                           <a onclick="showAdvancedPage()" class="item-link item-content">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title">Advanced</div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                        <li>
+                           <a onclick="showDonatePage()" class="item-link item-content">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title">Donate</div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                        <li>
+                           <a onclick="uninstall()" class="list-button color-red">Uninstall TrollStore</a>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px;color:grey">TrollStore 2.1.1
+                        <br>
+                        <br>© 2022-2026 Lars Fröder (opa334)
+                        <br>
+                        <br>TrollStore is NOT for piracy!
+                        <br>
+                        <br>Credits:
+                        <br>Google TAG, @alfiecg_dev: CoreTrust bug
+                        <br>@lunotech11, @SerenaKit, @tylinux, @TheRealClarity, @dhinakg, @khanhduytran0: Various contributions
+                        <br>@ProcursusTeam: uicache, ldid
+                        <br>@cstar_ow: uicache
+                        <br>@saurik: ldid</p>
+                  </div>
+               </div>
+            </div>
+            <div class="popup popup-tablet-fullscreen" id="hs" style="margin-top:0;border-radius:0" data-close-on-escape="true" data-swipe-to-close="true" data-push="true">
+               <div class="page">
+                  <div class="page-content">
+                     <div class="block block-strong inset">
+                        <div class="block-title block-title-large">Install TrollStore</div>
+                        <p>To use TrollStore, simply add it to your home screen.</p>
+                        <p>⚠️Attention: This is not real TrollStore, it looks like the real TrollStore but it's just a store for apps that require TrollStore to be installed. Before using make sure you have enabled URL Scheme in TrollStore.</p>
+                     </div>
+                     <div class="list separated inset">
+                        <ul>
+                           <li>
+                              <div class="item-content">
+                                 <div class="item-media">
+                                    <i style="font-size:35px" class="f7-icons">compass</i>
+                                 </div>
+                                 <div class="item-inner">Launch this webpage in Safari.</div>
+                              </div>
+                           </li>
+                           <li>
+                              <div class="item-content">
+                                 <div class="item-media">
+                                    <i style="font-size:35px" class="f7-icons">square_arrow_up</i>
+                                 </div>
+                                 <div class="item-inner">Tap the "Share" button</div>
+                              </div>
+                           </li>
+                           <li>
+                              <div class="item-content">
+                                 <div class="item-media">
+                                    <i style="font-size:35px" class="f7-icons">plus_app</i>
+                                 </div>
+                                 <div class="item-inner">and click "Add to Home Screen"</div>
+                              </div>
+                           </li>
+                        </ul>
+                     </div>
+                     <div class="block block-strong inset" id="ios14.0" style="visibility: visible;">
+                        <a onclick="useinweb()" class="button button-fill button-raised button-round">Use in web</a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div id="conf-alert-overlay" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; display:none; background:var(--f7-page-bg-color);">
+            <div class="page" style="position:absolute; left:0; top:0; right:0; bottom:0; margin:0; background:var(--f7-page-bg-color);">
+               <div class="navbar">
+                  <div class="navbar-bg">
+                  </div>
+                  <div class="navbar-inner" style="position:relative; display:flex; align-items:center; justify-content:space-between; padding:0 8px;">
+                     <div class="left" style="flex-shrink:0; display:flex; align-items:center;">
+                        <a href="#" onclick="closeConfAlert()" class="link" style="display:flex; align-items:center; min-width:0;">
+                           <i class="icon f7-icons" style="font-size:24px; flex-shrink:0;">chevron_left</i>
+                           <span id="back-text" style="font-size:17px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-left:4px;">Settings</span>
+                        </a>
+                     </div>
+                     <div class="title" id="conf-alert-title" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); width:auto; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:60%;">Show Install Confirmation Alert</div>
+                  </div>
+               </div>
+               <div class="page-content" style="padding-top: var(--f7-navbar-height);">
+                  <div class="list list-strong media-list inset list-dividers no-chevron">
+                     <ul>
+                        <li>
+                           <a class="item-link item-content conf-alert-option" data-value="Always">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title" style="white-space: normal; word-break: break-word;">Always (Recommended)</div>
+                                    <div class="item-after conf-alert-option-check" style="color:var(--f7-theme-color);">
+                                       <i class="icon f7-icons" style="font-size:20px; display:none;">checkmark</i>
+                                    </div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                        <li>
+                           <a class="item-link item-content conf-alert-option" data-value="Remote">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title" style="white-space: normal; word-break: break-word;">Only on Remote URL Installs</div>
+                                    <div class="item-after conf-alert-option-check" style="color:var(--f7-theme-color);">
+                                       <i class="icon f7-icons" style="font-size:20px; display:none;">checkmark</i>
+                                    </div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                        <li>
+                           <a class="item-link item-content conf-alert-option" data-value="Never">
+                              <div class="item-inner">
+                                 <div class="item-title-row">
+                                    <div class="item-title" style="white-space: normal; word-break: break-word;">Never (Not Recommended)</div>
+                                    <div class="item-after conf-alert-option-check" style="color:var(--f7-theme-color);">
+                                       <i class="icon f7-icons" style="font-size:20px; display:none;">checkmark</i>
+                                    </div>
+                                 </div>
+                              </div>
+                           </a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div id="donate-overlay" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; display:none; background:var(--f7-page-bg-color);">
+            <div class="page" style="position:absolute; left:0; top:0; right:0; bottom:0; margin:0; background:var(--f7-page-bg-color);">
+               <div class="navbar">
+                  <div class="navbar-bg">
+                  </div>
+                  <div class="navbar-inner" style="position:relative; display:flex; align-items:center; justify-content:space-between; padding:0 8px;">
+                     <div class="left" style="flex-shrink:0; display:flex; align-items:center;">
+                        <a href="#" onclick="closeDonatePage()" class="link" style="display:flex; align-items:center; min-width:0;">
+                           <i class="icon f7-icons" style="font-size:24px; flex-shrink:0;">chevron_left</i>
+                           <span id="donate-back-text" style="font-size:17px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-left:4px;">Settings</span>
+                        </a>
+                     </div>
+                     <div class="title" id="donate-title" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); width:auto; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:60%;">Donate</div>
+                     <div class="right" style="flex-shrink:0; min-width:40px;">
+                     </div>
+                  </div>
+               </div>
+               <div class="page-content" style="padding-top: var(--f7-navbar-height);">
+                  <div class="block-title" style="font-size:13px; color:grey;">ALFIE</div>
+                  <div class="list list-strong media-list inset no-chevron">
+                     <ul>
+                        <li>
+                           <a onclick="troll()" class="item-link item-content" style="color:var(--f7-theme-color);">
+                              <div class="item-inner">
+                                 <div class="item-title">Donate to alfiecg_dev</div>
+                              </div>
+                           </a>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px; color:grey;">Alfie found the new CoreTrust bug (CVE-2023-41991) via patchdiffing, produced a POC binary and worked on automatically applying it with the help of the ChOma library, while also contributing to said library.</p>
+                  </div>
+                  <div class="block-title" style="font-size:13px; color:grey;">OPA</div>
+                  <div class="list list-strong media-list inset no-chevron">
+                     <ul>
+                        <li>
+                           <a onclick="troll()" class="item-link item-content" style="color:var(--f7-theme-color);">
+                              <div class="item-inner">
+                                 <div class="item-title">Donate to opa334</div>
+                              </div>
+                           </a>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px; color:grey;">Opa developed the ChOma library, helped with automating the bug using it and integrated it into TrollStore.</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div id="advanced-overlay" style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; display:none; background:var(--f7-page-bg-color);">
+            <div class="page" style="position:absolute; left:0; top:0; right:0; bottom:0; margin:0; background:var(--f7-page-bg-color);">
+               <div class="navbar">
+                  <div class="navbar-bg">
+                  </div>
+                  <div class="navbar-inner" style="position:relative; display:flex; align-items:center; justify-content:space-between; padding:0 8px;">
+                     <div class="left" style="flex-shrink:0; display:flex; align-items:center;">
+                        <a href="#" onclick="closeAdvancedPage()" class="link" style="display:flex; align-items:center; min-width:0;">
+                           <i class="icon f7-icons" style="font-size:24px; flex-shrink:0;">chevron_left</i>
+                           <span id="advanced-back-text" style="font-size:17px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-left:4px;">Settings</span>
+                        </a>
+                     </div>
+                     <div class="title" id="advanced-title" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); width:auto; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:60%;">Advanced</div>
+                     <div class="right" style="flex-shrink:0; min-width:40px;">
+                     </div>
+                  </div>
+               </div>
+               <div class="page-content" style="padding-top: var(--f7-navbar-height);">
+                  <div class="list list-strong media-list inset no-chevron">
+                     <ul>
+                        <li>
+                           <div class="item-content" style="flex-direction:column; align-items:stretch;">
+                              <div class="item-inner" style="flex-direction:column; align-items:stretch; padding-top:8px; padding-bottom:8px;">
+                                 <div class="item-title" style="margin-bottom:4px;">Installation Method</div>
+                                 <div style="border-bottom:1px solid var(--f7-list-item-border-color); margin-bottom:8px;">
+                                 </div>
+                                 <div style="display:flex; justify-content:center; width:100%;">
+                                    <div class="segmented segmented-strong" style="width:100%; border-radius:0;">
+                                       <a href="#" class="button" data-method="installd">installd</a>
+                                       <a href="#" class="button tab-link-active" data-method="custom">Custom</a>
+                                       <span class="segmented-highlight">
+                                       </span>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px; color:grey;">installd:
+                        <br>Installs applications by doing a placeholder installation through installd, fixing the permissions and then adding it to icon cache.
+                        <br>Advantage: Might be slightly more persistent than the custom method in terms of icon cache reloads.
+                        <br>Disadvantage: Causes some small issues with certain applications for seemingly no reason (E.g. Watusi cannot save preferences when being installed using this method).
+                        <br>
+                        <br>Custom (Recommended):
+                        <br>Installs applications by manually creating a bundle using MobileContainerManager, copying the app into it and adding it to icon cache.
+                        <br>Advantage: No known issues (As opposed to the Watusi issue outlined in the installd method).
+                        <br>Disadvantage: Might be slightly less persistent then the installd method in terms of icon cache reloads.
+                        <br>
+                        <br>NOTE: In cases where installd is selected but the placeholder installation fails, TrollStore automatically falls back to using the Custom method.</p>
+                  </div>
+                  <div class="list list-strong media-list inset no-chevron" style="margin-top:16px;">
+                     <ul>
+                        <li>
+                           <div class="item-content" style="flex-direction:column; align-items:stretch;">
+                              <div class="item-inner" style="flex-direction:column; align-items:stretch; padding-top:8px; padding-bottom:8px;">
+                                 <div class="item-title" style="margin-bottom:4px;">Uninstallation Method</div>
+                                 <div style="border-bottom:1px solid var(--f7-list-item-border-color); margin-bottom:8px;">
+                                 </div>
+                                 <div style="display:flex; justify-content:center; width:100%;">
+                                    <div class="segmented segmented-strong" style="width:100%; border-radius:0;">
+                                       <a href="#" class="button tab-link-active" data-method="installd">installd</a>
+                                       <a href="#" class="button" data-method="custom">Custom</a>
+                                       <span class="segmented-highlight">
+                                       </span>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                     <p style="font-size:13px; color:grey;">installd (Recommended):
+                        <br>Uninstalls applications using the same API that SpringBoard uses when uninstalling them from the home screen.
+                        <br>
+                        <br>Custom:
+                        <br>Uninstalls applications by removing them from icon cache and then deleting their application and data bundles directly.
+                        <br>
+                        <br>NOTE: In cases where installd is selected but the stock uninstallation fails, TrollStore automatically falls back to using the Custom method.</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <script src="./cdn.jsdelivr.net/npm/framework7@8/framework7-bundle.min.js"></script>
+         <script type="text/javascript" src="core.js"></script>
+         <script type="module" src="./unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+         <script nomodule="" src="./unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      </div>
+</body>
+
+</html>
