@@ -283,31 +283,13 @@ function closeDonatePage() {
 function initSegmentedControls() {
     document.querySelectorAll('.segmented-strong').forEach(group => {
         const buttons = group.querySelectorAll('.button');
-        const highlight = group.querySelector('.segmented-highlight');
-
-        function updateHighlight(activeButton) {
-            if (!highlight) return;
-            const groupRect = group.getBoundingClientRect();
-            const btnRect = activeButton.getBoundingClientRect();
-            const left = btnRect.left - groupRect.left;
-            const width = btnRect.width;
-            highlight.style.transform = `translateX(${left}px)`;
-            highlight.style.width = `${width}px`;
-        }
-
         buttons.forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
-                buttons.forEach(b => b.classList.remove('tab-link-active'));
-                this.classList.add('tab-link-active');
-                updateHighlight(this);
+                buttons.forEach(b => b.classList.remove('button-active'));
+                this.classList.add('button-active');
             });
         });
-
-        const activeBtn = group.querySelector('.button.tab-link-active');
-        if (activeBtn) {
-            setTimeout(() => updateHighlight(activeBtn), 10);
-        }
     });
 }
 
