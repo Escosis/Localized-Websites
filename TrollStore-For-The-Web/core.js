@@ -317,3 +317,44 @@ function closeAdvancedPage() {
         window._advancedResize = null;
     }
 }
+
+// Add Button
+document.addEventListener('DOMContentLoaded', function() {
+
+    const addBtn = document.getElementById('add-app-button');
+    if (addBtn) {
+        addBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            app.popover.open('#add-popover', this);
+        });
+    }
+
+    // Install IPA File
+    const installIpa = document.getElementById('install-ipa');
+    if (installIpa) {
+        installIpa.addEventListener('click', function(e) {
+            e.preventDefault();
+            app.popover.close();
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.ipa';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                troll();
+            };
+            input.click();
+        });
+    }
+
+    // Install from URL
+    const installUrl = document.getElementById('install-url');
+    if (installUrl) {
+        installUrl.addEventListener('click', function(e) {
+            e.preventDefault();
+            app.popover.close();
+            app.dialog.prompt('', 'Install from URL', function(value) {
+                troll();
+            }, 'URL');
+        });
+    }
+});
