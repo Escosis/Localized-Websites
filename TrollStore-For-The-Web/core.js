@@ -158,10 +158,23 @@ function updateTabTitle() {
       if (i) {
         i.textContent = e;
       }
+      var addBtn = document.getElementById("add-app-button");
+      if (addBtn) {
+        addBtn.style.display = (e === "Apps") ? "flex" : "none";
+      }
     });
   });
 }
 updateTabTitle();
+
+var activeTab = document.querySelector(".tab-link.tab-link-active");
+if (activeTab) {
+  var title = activeTab.getAttribute("data-tab-title");
+  var addBtn = document.getElementById("add-app-button");
+  if (addBtn) {
+    addBtn.style.display = (title === "Apps") ? "flex" : "none";
+  }
+}
 
 function troll() {
   app.dialog.alert(
@@ -200,13 +213,24 @@ function updateConfAlertOptions() {
 function showConfAlert() {
     document.getElementById('conf-alert-overlay').style.display = 'block';
     updateConfAlertOptions();
-    adjustBackButton();
-    window.addEventListener('resize', adjustBackButton);
+    var title = document.getElementById('conf-alert-title');
+    var backText = document.getElementById('back-text');
+    if (title && backText) {
+        adjustBackButton(title, backText);
+        if (window._confResize) window.removeEventListener('resize', window._confResize);
+        window._confResize = function() {
+            adjustBackButton(title, backText);
+        };
+        window.addEventListener('resize', window._confResize);
+    }
 }
 
 function closeConfAlert() {
     document.getElementById('conf-alert-overlay').style.display = 'none';
-    window.removeEventListener('resize', adjustBackButton);
+    if (window._confResize) {
+        window.removeEventListener('resize', window._confResize);
+        window._confResize = null;
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
