@@ -382,3 +382,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+app.on('popoverOpen', function(popover) {
+    if (popover.el.id === 'add-popover') {
+        var target = document.getElementById('add-app-button');
+        if (!target) return;
+
+        var targetRect = target.getBoundingClientRect();
+        var popoverEl = popover.el;
+
+        var originX = popoverEl.offsetWidth - targetRect.width / 2;
+        var originY = 0;
+
+        popoverEl.style.transformOrigin = originX + 'px ' + originY + 'px';
+    }
+});

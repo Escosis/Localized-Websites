@@ -76,3 +76,48 @@ img {
   position: absolute;
   opacity: 0;
 }
+.main-navbar .navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+}
+.main-navbar .navbar-inner .left,
+.main-navbar .navbar-inner .right {
+    flex: 0 0 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+}
+.main-navbar .navbar-inner .title {
+    flex: 1 1 auto;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 4px;
+}
+.ios .popover {
+    transform: scale(0) !important;
+    transition: transform 0.3s ease !important;
+    opacity: 1 !important;
+}
+.ios .popover.modal-in {
+    transform: scale(1) !important;
+}
+#conf-alert-entry .item-title-row {
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+#conf-alert-entry .item-title {
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+#conf-alert-entry .item-after {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
