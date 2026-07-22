@@ -211,7 +211,8 @@ function updateConfAlertOptions() {
 }
 
 function showConfAlert() {
-    document.getElementById('conf-alert-overlay').style.display = 'block';
+    var overlay = document.getElementById('conf-alert-overlay');
+    overlay.classList.add('active');
     updateConfAlertOptions();
     var title = document.getElementById('conf-alert-title');
     var backText = document.getElementById('back-text');
@@ -226,7 +227,7 @@ function showConfAlert() {
 }
 
 function closeConfAlert() {
-    document.getElementById('conf-alert-overlay').style.display = 'none';
+    document.getElementById('conf-alert-overlay').classList.remove('active');
     if (window._confResize) {
         window.removeEventListener('resize', window._confResize);
         window._confResize = null;
@@ -283,7 +284,7 @@ function showDonatePage() {
         window.removeEventListener('resize', currentResizeHandler);
         currentResizeHandler = null;
     }
-    document.getElementById('donate-overlay').style.display = 'block';
+    document.getElementById('donate-overlay').classList.add('active');
     var title = document.getElementById('donate-title');
     var backText = document.getElementById('donate-back-text');
     if (title && backText) {
@@ -296,7 +297,7 @@ function showDonatePage() {
 }
 
 function closeDonatePage() {
-    document.getElementById('donate-overlay').style.display = 'none';
+    document.getElementById('donate-overlay').classList.remove('active');
     if (currentResizeHandler) {
         window.removeEventListener('resize', currentResizeHandler);
         currentResizeHandler = null;
@@ -318,8 +319,7 @@ function initSegmentedControls() {
 }
 
 function showAdvancedPage() {
-    document.getElementById('advanced-overlay').style.display = 'block';
-
+    document.getElementById('advanced-overlay').classList.add('active');
     var title = document.getElementById('advanced-title');
     var backText = document.getElementById('advanced-back-text');
     if (title && backText) {
@@ -335,7 +335,7 @@ function showAdvancedPage() {
 }
 
 function closeAdvancedPage() {
-    document.getElementById('advanced-overlay').style.display = 'none';
+    document.getElementById('advanced-overlay').classList.remove('active');
     if (window._advancedResize) {
         window.removeEventListener('resize', window._advancedResize);
         window._advancedResize = null;

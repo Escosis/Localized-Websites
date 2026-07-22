@@ -121,3 +121,24 @@ img {
     white-space: nowrap;
     min-width: 0;
 }
+#conf-alert-overlay,
+#advanced-overlay,
+#donate-overlay {
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s 0.35s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: var(--f7-page-bg-color);
+}
+#conf-alert-overlay.active,
+#advanced-overlay.active,
+#donate-overlay.active {
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s 0s;
+}
