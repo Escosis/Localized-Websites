@@ -81,6 +81,7 @@ img {
     align-items: center;
     justify-content: space-between;
     padding: 0 8px;
+    position: relative;
 }
 .main-navbar .navbar-inner .left,
 .main-navbar .navbar-inner .right {
@@ -90,12 +91,17 @@ img {
     align-items: center;
 }
 .main-navbar .navbar-inner .title {
-    flex: 1 1 auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    max-width: 60%;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 0 4px;
+    margin: 0;
 }
 .ios .popover {
     transform: scale(0) !important;
