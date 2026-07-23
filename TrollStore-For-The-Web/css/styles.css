@@ -145,10 +145,10 @@ img {
 .standalone-mode #conf-alert-overlay .navbar-inner,
 .standalone-mode #advanced-overlay .navbar-inner,
 .standalone-mode #donate-overlay .navbar-inner {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    padding: 0 8px !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
 }
 .standalone-mode #conf-alert-overlay .navbar-inner .title,
 .standalone-mode #advanced-overlay .navbar-inner .title,
@@ -157,14 +157,11 @@ img {
     left: auto !important;
     top: auto !important;
     transform: none !important;
-    flex: 1 !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    margin: 0 4px !important;
-    width: auto !important;
-    max-width: none !important;
+    flex: 1 1 auto;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0 4px;
 }
 .standalone-mode #conf-alert-overlay .navbar-inner .left,
 .standalone-mode #advanced-overlay .navbar-inner .left,
@@ -174,6 +171,8 @@ img {
 .standalone-mode #donate-overlay .navbar-inner .right {
     flex: 0 0 44px !important;
     min-width: 44px !important;
-    display: flex !important;
-    align-items: center !important;
+    max-width: 44px !important;
+    overflow: hidden !important;
+    display: flex;
+    align-items: center;
 }

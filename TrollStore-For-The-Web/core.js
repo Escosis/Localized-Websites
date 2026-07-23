@@ -275,36 +275,25 @@ var currentResizeHandler = null;
 
 function adjustBackButton(titleEl, backTextEl) {
     if (!titleEl || !backTextEl) return;
-    if (titleEl.scrollWidth > titleEl.clientWidth) {
+    var navbarInner = titleEl.closest('.navbar-inner');
+    if (!navbarInner) return;
+    var navbarInnerWidth = navbarInner.offsetWidth;
+    var leftEl = navbarInner.querySelector('.left');
+    if (!leftEl) return;
+    var leftWidth = leftEl.offsetWidth;
+    var availableWidth = navbarInnerWidth / 2 - leftWidth;
+    if (titleEl.scrollWidth > availableWidth) {
         backTextEl.style.display = 'none';
     } else {
         backTextEl.style.display = 'inline';
     }
 }
-
 function showDonatePage() {
-    if (currentResizeHandler) {
-        window.removeEventListener('resize', currentResizeHandler);
-        currentResizeHandler = null;
-    }
     document.getElementById('donate-overlay').classList.add('active');
-    var title = document.getElementById('donate-title');
-    var backText = document.getElementById('donate-back-text');
-    if (title && backText) {
-        adjustBackButton(title, backText);
-        currentResizeHandler = function() {
-            adjustBackButton(title, backText);
-        };
-        window.addEventListener('resize', currentResizeHandler);
-    }
 }
 
 function closeDonatePage() {
     document.getElementById('donate-overlay').classList.remove('active');
-    if (currentResizeHandler) {
-        window.removeEventListener('resize', currentResizeHandler);
-        currentResizeHandler = null;
-    }
 }
 
 // Advanced
@@ -323,26 +312,11 @@ function initSegmentedControls() {
 
 function showAdvancedPage() {
     document.getElementById('advanced-overlay').classList.add('active');
-    var title = document.getElementById('advanced-title');
-    var backText = document.getElementById('advanced-back-text');
-    if (title && backText) {
-        adjustBackButton(title, backText);
-    }
-    if (window._advancedResize) window.removeEventListener('resize', window._advancedResize);
-    window._advancedResize = function() {
-        adjustBackButton(title, backText);
-    };
-    window.addEventListener('resize', window._advancedResize);
-
     setTimeout(initSegmentedControls, 50);
 }
 
 function closeAdvancedPage() {
     document.getElementById('advanced-overlay').classList.remove('active');
-    if (window._advancedResize) {
-        window.removeEventListener('resize', window._advancedResize);
-        window._advancedResize = null;
-    }
 }
 
 // Add Button
