@@ -142,3 +142,15 @@ img {
     transform: translateX(0);
     transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), visibility 0s 0s;
 }
+.standalone-mode #conf-alert-overlay .navbar-inner .title,
+.standalone-mode #advanced-overlay .navbar-inner .title,
+.standalone-mode #donate-overlay .navbar-inner .title {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    position: absolute !important;
+}
+.standalone-mode #conf-alert-overlay .navbar-inner,
+.standalone-mode #advanced-overlay .navbar-inner,
+.standalone-mode #donate-overlay .navbar-inner {
+    position: relative !important;
+}
