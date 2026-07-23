@@ -177,3 +177,14 @@ img {
     text-overflow: ellipsis !important;
     margin: 0 4px !important;
 }
+.standalone-mode #conf-alert-overlay .navbar-inner .left,
+.standalone-mode #advanced-overlay .navbar-inner .left,
+.standalone-mode #donate-overlay .navbar-inner .left,
+.standalone-mode #conf-alert-overlay .navbar-inner .right,
+.standalone-mode #advanced-overlay .navbar-inner .right,
+.standalone-mode #donate-overlay .navbar-inner .right {
+    display: flex !important;
+    align-items: center !important;
+    flex: 0 0 44px !important;
+    min-width: 44px !important;
+}
