@@ -1,3 +1,6 @@
+if (window.navigator.standalone) {
+    document.documentElement.classList.add('standalone-mode');
+}
 var app = new Framework7({
     el: "#app",
     theme: "ios",
