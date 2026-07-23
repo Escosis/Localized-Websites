@@ -154,7 +154,7 @@ img {
 .standalone-mode #donate-overlay .navbar-inner {
     position: relative !important;
 }
-.standalone-mode .navbar-inner {
-    min-height: 44px;
-    align-items: center;
+.standalone-mode .main-navbar .navbar-inner {
+    min-height: 44px !important;
+    align-items: center !important;
 }
