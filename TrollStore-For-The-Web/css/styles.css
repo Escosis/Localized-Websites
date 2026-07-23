@@ -155,6 +155,25 @@ img {
     position: relative !important;
 }
 .standalone-mode .main-navbar .navbar-inner {
-    min-height: 44px !important;
+    display: flex !important;
     align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 8px !important;
+    min-height: 44px !important;
+    height: auto !important;
+}
+.standalone-mode .main-navbar .navbar-inner .left,
+.standalone-mode .main-navbar .navbar-inner .right {
+    flex: 0 0 44px !important;
+    min-width: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+.standalone-mode .main-navbar .navbar-inner .title {
+    flex: 1 1 auto !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 4px !important;
 }
