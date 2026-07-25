@@ -70808,6 +70808,7 @@ var _global =
                           t.n = 2;
                           break;
                         }
+                        throw (r(Nu(i.code)), new Error("LOGIN_FAILED"));
                       case 2:
                         return (
                           (nh.u8_token = A || ""),
@@ -70820,6 +70821,9 @@ var _global =
                           t.n = 4;
                           break;
                         }
+                        throw (
+                          (r(Nu(a.code)), new Error("GET_USER_INFO_FAILED"))
+                        );
                       case 4:
                         return (t.n = 5), Eh();
                       case 5:
