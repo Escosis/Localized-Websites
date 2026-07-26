@@ -182,34 +182,20 @@ img {
 .standalone-mode #donate-overlay .navbar-inner {
     display: flex !important;
     align-items: center !important;
-    justify-content: space-between !important;
-    padding: 0 8px !important;
     min-height: 44px !important;
-    height: auto !important;
+    padding: 0 8px !important;
 }
 .standalone-mode #conf-alert-overlay .navbar-inner .left,
 .standalone-mode #advanced-overlay .navbar-inner .left,
-.standalone-mode #donate-overlay .navbar-inner .left,
+.standalone-mode #donate-overlay .navbar-inner .left {
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    height: 100% !important;
+}
 .standalone-mode #conf-alert-overlay .navbar-inner .right,
 .standalone-mode #advanced-overlay .navbar-inner .right,
 .standalone-mode #donate-overlay .navbar-inner .right {
-    flex: 0 0 44px !important;
-    min-width: 44px !important;
-    display: flex !important;
-    align-items: center !important;
-}
-.standalone-mode #conf-alert-overlay .navbar-inner .title,
-.standalone-mode #advanced-overlay .navbar-inner .title,
-.standalone-mode #donate-overlay .navbar-inner .title {
-    position: relative !important;
-    left: auto !important;
-    top: auto !important;
-    transform: none !important;
-    flex: 1 1 auto !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    margin: 0 4px !important;
-    max-width: none !important;
+    flex-shrink: 0 !important;
+    min-width: 40px !important;
 }
