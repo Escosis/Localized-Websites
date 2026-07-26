@@ -180,21 +180,45 @@ img {
 .standalone-mode #conf-alert-overlay .navbar-inner,
 .standalone-mode #advanced-overlay .navbar-inner,
 .standalone-mode #donate-overlay .navbar-inner {
-    min-height: 44px;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    padding: 0 8px !important;
+    position: relative !important;
+}
+.standalone-mode #conf-alert-overlay .navbar-inner .title,
+.standalone-mode #advanced-overlay .navbar-inner .title,
+.standalone-mode #donate-overlay .navbar-inner .title {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: auto !important;
+    max-width: 60% !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 .standalone-mode #conf-alert-overlay .navbar-inner .left,
 .standalone-mode #advanced-overlay .navbar-inner .left,
 .standalone-mode #donate-overlay .navbar-inner .left {
     display: flex !important;
     align-items: center !important;
+    flex-shrink: 0 !important;
     height: 100% !important;
-    padding-left: 8px;
 }
 .standalone-mode #conf-alert-overlay .navbar-inner .left a,
 .standalone-mode #advanced-overlay .navbar-inner .left a,
 .standalone-mode #donate-overlay .navbar-inner .left a {
-    display: flex;
-    align-items: center;
-    line-height: normal;
-    padding: 0;
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    line-height: 1 !important;
+}
+
+.standalone-mode #conf-alert-overlay .navbar-inner .right,
+.standalone-mode #advanced-overlay .navbar-inner .right,
+.standalone-mode #donate-overlay .navbar-inner .right {
+    flex: 0 0 40px !important;
 }
