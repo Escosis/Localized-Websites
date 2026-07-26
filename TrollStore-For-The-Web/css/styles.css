@@ -177,3 +177,37 @@ img {
     text-overflow: ellipsis !important;
     margin: 0 4px !important;
 }
+.standalone-mode #conf-alert-overlay .navbar-inner,
+.standalone-mode #advanced-overlay .navbar-inner,
+.standalone-mode #donate-overlay .navbar-inner {
+    display: flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    padding: 0 8px !important;
+}
+.standalone-mode #conf-alert-overlay .navbar-inner .title,
+.standalone-mode #advanced-overlay .navbar-inner .title,
+.standalone-mode #donate-overlay .navbar-inner .title {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    flex: 1 1 auto !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin: 0 4px !important;
+}
+.standalone-mode #conf-alert-overlay .navbar-inner .left,
+.standalone-mode #advanced-overlay .navbar-inner .left,
+.standalone-mode #donate-overlay .navbar-inner .left {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+}
+.standalone-mode #conf-alert-overlay .navbar-inner .right,
+.standalone-mode #advanced-overlay .navbar-inner .right,
+.standalone-mode #donate-overlay .navbar-inner .right {
+    flex: 0 0 40px !important;
+}
