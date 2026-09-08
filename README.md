@@ -1,8 +1,8 @@
 ## 这个项目收集了许多由AI协助本地化的网页，可以直接访问 [Localized Websites](https://escosis.github.io/Localized-Websites/) 进行预览。
 
-**对于本地文件，Android端用户请安装本人另一个项目 [Offline WebView](https://github.com/Escosis/Offline-WebView) 进行浏览。**
+**对于本地文件，Android 端用户请安装本人另一个项目 [Offline WebView](https://github.com/Escosis/Offline-WebView) 进行浏览。**
 
-**Windows端用户可用以下方法打开进行浏览：**
+**Windows 端用户可用以下方法打开进行浏览：**
 
 ### 方法一：在电脑浏览器中打开`htm/html`直接阅读，但需要禁用浏览器的 CORS 策略才可正常使用，否则将由于该策略限制无法访问资源文件。
 
