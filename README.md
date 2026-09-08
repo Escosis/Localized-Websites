@@ -18,7 +18,7 @@
 （注意双引号后有一个空格）
 
 **禁用方法三：**  
-新建一个`bat`文件，内容如下：（也可根据情况修改）
+新建一个`bat`文件，内容如下：（应根据情况修改路径）
 ```batch
 @echo off
 start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --disable-web-security --user-data-dir="C:\EdgeDevData" --allow-file-access-from-files "%~1"
