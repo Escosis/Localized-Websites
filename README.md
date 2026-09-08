@@ -7,7 +7,7 @@
 ### 方法一：在电脑浏览器中打开`htm/html`直接阅读，但需要禁用浏览器的 CORS 策略才可正常使用，否则将由于该策略限制无法访问资源文件。
 
 **禁用方法一：**  
-在浏览器地址栏输入 chrome://flags/或edge://flags/，搜索 CORS 找到 Block insecure private network requests. 这个选项，改为 Disabled，重启浏览器。
+在浏览器地址栏输入 chrome://flags/ 或 edge://flags/，搜索 CORS 找到 Block insecure private network requests. 这个选项，改为 Disabled，重启浏览器。
 
 **禁用方法二：**  
 创建一个新目录作为数据目录，在浏览器的某个快捷方式属性栏的目标后添加 --disable-web-security --user-data-dir=`<新数据目录路径>`，使用以此快捷方式打开的浏览器进行阅读。  
