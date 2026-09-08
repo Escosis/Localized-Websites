@@ -25,4 +25,4 @@ start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --disabl
 ```
 然后可使用 BatToExeConverter 转为`exe`并设置为`htm/html`的打开方式，之后直接点开即可
 
-### 方法二：启动一个本地服务器，从中访问htm/html
+### 方法二：启动一个本地服务器，从中访问`htm/html`
