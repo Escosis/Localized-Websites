@@ -10,6 +10,9 @@
   var TUTORIAL_KEY = 'tt-tutorial-skipped';
   var PROGRESS_KEY = 'tt-task-progress';
   var CLAIMED_KEY = 'tt-task-claimed';
+  var USER_KEY = 'tt-user-info';
+  var INF_KEY = 'tt-infinite-energy';
+  var INV_KEY = 'tt-invincible';
 
   /* ---------- i18n ---------- */
   var PT = {
@@ -31,7 +34,8 @@
       golden: '解锁黄金管理员',
       skipTut: '跳过教程',
       showTut: '显示教程',
-      clearProgress: '清空进度',
+      resetSettings: '恢复默认设置',
+      clearAllData: '清除所有数据',
       nickname: '昵称（空=管理员）',
       uid: 'UID（空=10000001）',
       avatar: '头像编号（3~53，空=默认头像）',
@@ -39,7 +43,8 @@
       close: '关闭面板',
       remove: '移除面板',
       defaultNickname: '管理员',
-      confirmClear: '确定要清空所有本地数据吗？清空后页面将自动刷新。',
+      confirmClear: '确定要清除所有数据吗？包括设置、进度、教程状态。清空后页面将自动刷新。',
+      confirmReset: '确定要恢复默认设置吗？仅清除设置项（用户信息、无限技力、无敌、锁定等级），不影响任务进度。页面将自动刷新。',
       confirmLang: '切换游戏语言后将重新加载页面，是否继续？'
     },
     'en-us': {
@@ -60,7 +65,8 @@
       golden: 'Unlock Golden Endmin',
       skipTut: 'Skip Tutorial',
       showTut: 'Show Tutorial',
-      clearProgress: 'Clear Progress',
+      resetSettings: 'Reset Settings',
+      clearAllData: 'Clear All Data',
       nickname: 'Nickname (blank=Endmin)',
       uid: 'UID (blank=10000001)',
       avatar: 'Avatar # (3~53, blank=default)',
@@ -68,7 +74,8 @@
       close: 'Close Panel',
       remove: 'Remove Panel',
       defaultNickname: 'Endmin',
-      confirmClear: 'Clear ALL local data? Page will reload.',
+      confirmClear: 'Clear ALL data? Settings, progress, tutorial state. Page will reload.',
+      confirmReset: 'Reset all settings? (user info, infinite skill, invincible, level lock) Progress is unaffected. Page will reload.',
       confirmLang: 'Page will reload with new language. Continue?'
     }
   };
@@ -111,7 +118,7 @@
         var aO = D.aO;
         var e8 = D.e8;
         var j = D.j;
-        var o0 = D.o0;
+        var o2 = D.o2;
         var aw = D.aw;
         var eF = D.eF;
         var eI = D.eI;
@@ -119,9 +126,9 @@
 
         /* ---------- 无敌：hook 越线检测 ---------- */
         try {
-          if (o0 && o0.prototype && o0.prototype.checkGameOver) {
-            var _origCGO = o0.prototype.checkGameOver;
-            o0.prototype.checkGameOver = function (e) {
+          if (o2 && o2.prototype && o2.prototype.checkGameOver) {
+            var _origCGO = o2.prototype.checkGameOver;
+            o2.prototype.checkGameOver = function (e) {
               if (tA.getState().invincible) {
                 try { if (this.renderer) this.renderer.setDangerCountdown(null); } catch (x) {}
                 try { if (this.dangerCountdown && this.dangerCountdown.reset) this.dangerCountdown.reset(); } catch (x) {}
@@ -185,6 +192,44 @@
             }
           } catch (e) {}
         }
+
+        /* ---------- 自动保存用户信息 ---------- */
+        function saveUserInfo() {
+          try {
+            var u = ty.getState().userInfo || {};
+            lsSet(USER_KEY, JSON.stringify({
+              nickname: u.nickname || '',
+              uid: u.roleId || '',
+              avatar: (u.avatar === null || u.avatar === undefined) ? null : u.avatar
+            }));
+          } catch (e) {}
+        }
+
+        /* ---------- 启动：应用已保存的用户信息 / 无限技力 / 无敌 ---------- */
+        try {
+          var _su = lsGetJSON(USER_KEY, null);
+          if (_su) {
+            var _old = ty.getState().userInfo || {};
+            ty.getState().setUserInfo(Object.assign({}, _old, {
+              nickname: _su.nickname,
+              roleId: _su.uid,
+              uid: _su.uid,
+              avatar: (_su.avatar === undefined ? null : _su.avatar)
+            }));
+            syncMockSelf(_su.nickname, _su.avatar);
+          }
+        } catch (e) {}
+        try {
+          if (lsGet(INF_KEY) === '1') {
+            tA.getState().setInfiniteEnergy(true);
+            e3.setState({ energy: 3, energyProgress: 0, energyDecayStartedAt: 0, nextEnergyDecayAt: 0, swapCharge: 6 });
+          }
+        } catch (e) {}
+        try {
+          if (lsGet(INV_KEY) === '1') {
+            tA.setState({ invincible: true });
+          }
+        } catch (e) {}
 
         /* ---------- 锁定等级 ---------- */
         var lockLevel = lsGetJSON(LOCK_KEY, { on: false, next: 5 });
@@ -352,18 +397,21 @@
             '.tt-row label{display:block;font-size:0.6875em;color:#666;margin-bottom:0.125em}',
             '.tt-inline{display:flex;gap:0.25em}',
             '.tt-inline input,.tt-inline select{flex:1;min-width:0;padding:0.25em 0.5em;border:1px solid #ccc;border-radius:0.25em;box-sizing:border-box;font-size:0.8125em;background:#fff;font-family:inherit}',
-            '.tt-mini{padding:0.25em 0.625em;background:#c2d73b;color:#fff;border:none;border-radius:0.25em;cursor:pointer;font-size:0.75em;font-weight:bold;font-family:inherit}',
+            '.tt-mini{padding:0.25em 0.5em;background:#c2d73b;color:#fff;border:none;border-radius:0.25em;cursor:pointer;font-size:0.72em;font-weight:bold;font-family:inherit;white-space:nowrap;flex-shrink:0}',
             '.tt-btn{padding:0.375em 0.625em;border:none;border-radius:0.375em;cursor:pointer;font-weight:bold;color:#fff;font-size:0.75em;font-family:inherit}',
             '.tt-gap{margin-top:0.5em;margin-bottom:0.5em;height:1px;background:#eee}',
             '.tt-checks{margin-top:0.375em;margin-bottom:0.375em;display:flex;flex-direction:column;gap:0.25em;font-size:0.75em;}',
             '.tt-checks label{display:flex;align-items:center;gap:0.375em;padding:0.3125em;border-radius:0.25em;background:#f7f7f7;cursor:pointer;}',
-            '.tt-btnrow{display:grid;grid-template-columns:1fr 1fr;gap:0.375em;margin-top:0.375em}',
+            '.tt-btnrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0.375em;margin-top:0.375em}',
+            '.tt-grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0.3125em 0.5em}',
+            '.tt-grid2 .tt-row{margin-bottom:0}',
             '</style>',
 
             '<div class="tt-row"><label>' + t('gameLang') + '</label><div class="tt-inline"><select id="tt-lang">' + buildLangOptions() + '</select></div></div>',
             '<div class="tt-row"><label>' + t('panelLang') + '</label><div class="tt-inline"><select id="tt-panel-lang">' + buildPanelLangOptions() + '</select></div></div>',
             '<div class="tt-gap"></div>',
 
+            '<div class="tt-grid2">',
             buildRow(t('score'), 'tt-score'),
             buildRow(t('mergeCount'), 'tt-merge'),
             buildRow(t('skillCount'), 'tt-skill'),
@@ -372,6 +420,17 @@
             buildRow(t('swapCharge'), 'tt-swap', 'number', 'min="0" max="6"'),
             buildRow(t('curLevel'), 'tt-cur', 'number', 'min="1" max="11"'),
             buildRow(t('nextLevel'), 'tt-next', 'number', 'min="1" max="11"'),
+            '</div>',
+
+            '<div class="tt-gap"></div>',
+
+            '<div class="tt-grid2">',
+            '<div class="tt-row"><label>' + t('nickname') + '</label><div class="tt-inline"><input id="tt-nick" type="text"><button class="tt-mini" id="tt-apply-nick">' + t('apply') + '</button></div></div>',
+            '<div class="tt-row"><label>' + t('uid') + '</label><div class="tt-inline"><input id="tt-uid" type="text"><button class="tt-mini" id="tt-apply-uid">' + t('apply') + '</button></div></div>',
+            '<div class="tt-row" style="grid-column:1 / -1"><label>' + t('avatar') + '</label><div class="tt-inline"><input id="tt-avatar" type="text" placeholder="3~53"><button class="tt-mini" id="tt-apply-avatar">' + t('apply') + '</button></div></div>',
+            '</div>',
+
+            '<div class="tt-gap"></div>',
 
             '<div class="tt-checks">',
             '<label><input type="checkbox" id="tt-lock-level"> ' + t('lockNext') + '</label>',
@@ -383,14 +442,9 @@
             '<button class="tt-btn" id="tt-golden" style="background:#e6b800;grid-column:1 / -1;">' + t('golden') + '</button>',
             '<button class="tt-btn" id="tt-skip-tutorial" style="background:#4a90e2;">' + t('skipTut') + '</button>',
             '<button class="tt-btn" id="tt-show-tutorial" style="background:#4a90e2;">' + t('showTut') + '</button>',
-            '<button class="tt-btn" id="tt-clear-progress" style="background:#c0392b;grid-column:1 / -1;">' + t('clearProgress') + '</button>',
+            '<button class="tt-btn" id="tt-reset-settings" style="background:#e67e22;">' + t('resetSettings') + '</button>',
+            '<button class="tt-btn" id="tt-clear-progress" style="background:#c0392b;">' + t('clearAllData') + '</button>',
             '</div>',
-
-            '<div class="tt-gap"></div>',
-
-            '<div class="tt-row"><label>' + t('nickname') + '</label><div class="tt-inline"><input id="tt-nick" type="text"><button class="tt-mini" id="tt-apply-nick">' + t('apply') + '</button></div></div>',
-            '<div class="tt-row"><label>' + t('uid') + '</label><div class="tt-inline"><input id="tt-uid" type="text"><button class="tt-mini" id="tt-apply-uid">' + t('apply') + '</button></div></div>',
-            '<div class="tt-row"><label>' + t('avatar') + '</label><div class="tt-inline"><input id="tt-avatar" type="text" placeholder="3~53"><button class="tt-mini" id="tt-apply-avatar">' + t('apply') + '</button></div></div>',
 
             '<div class="tt-gap"></div>',
 
@@ -448,7 +502,6 @@
             });
           };
 
-          // 面板语言
           q('tt-panel-lang').onchange = function () {
             var lang = this.value;
             if (lang !== 'zh-cn' && lang !== 'en-us') lang = 'en-us';
@@ -486,30 +539,41 @@
             var old = ty.getState().userInfo || {};
             ty.getState().setUserInfo(Object.assign({}, old, { nickname: nick }));
             syncMockSelf(nick, undefined);
+            saveUserInfo();
           };
           q('tt-apply-uid').onclick = function () {
             var uid = q('tt-uid').value.trim() || '10000001';
             var old = ty.getState().userInfo || {};
             ty.getState().setUserInfo(Object.assign({}, old, { roleId: uid, uid: uid }));
+            saveUserInfo();
           };
           q('tt-apply-avatar').onclick = function () {
             var s = q('tt-avatar').value.trim();
-            var avatar;
-            if (s === '') avatar = null;
-            else { var n = parseInt(s, 10); if (!isFinite(n)) n = 3; avatar = Math.max(3, Math.min(53, n)); }
+            var avatar = null;
+            if (s !== '') {
+              var n = parseInt(s, 10);
+              if (isFinite(n) && n >= 3 && n <= 53) avatar = n;
+            }
             var old = ty.getState().userInfo || {};
             ty.getState().setUserInfo(Object.assign({}, old, { avatar: avatar }));
             syncMockSelf(undefined, avatar);
+            saveUserInfo();
             q('tt-avatar').value = avatar === null ? '' : avatar;
           };
 
           q('tt-inf-energy').onchange = function () {
-            tA.getState().setInfiniteEnergy(this.checked);
-            if (this.checked) {
+            var v = this.checked;
+            tA.getState().setInfiniteEnergy(v);
+            lsSet(INF_KEY, v ? '1' : '0');
+            if (v) {
               e3.setState({ energy: 3, energyProgress: 0, energyDecayStartedAt: 0, nextEnergyDecayAt: 0, swapCharge: 6 });
             }
           };
-          q('tt-invincible').onchange = function () { tA.setState({ invincible: this.checked }); };
+          q('tt-invincible').onchange = function () {
+            var v = this.checked;
+            tA.setState({ invincible: v });
+            lsSet(INV_KEY, v ? '1' : '0');
+          };
           q('tt-lock-level').onchange = function () {
             lockLevel.on = this.checked;
             if (lockLevel.on) {
@@ -537,6 +601,15 @@
                 if (ih && ih.dropCurrent) { try { ih.dropCurrent(); } catch (e) {} }
               });
             } catch (e) { console.warn('[TT-Panel] show tutorial', e); }
+          };
+
+          q('tt-reset-settings').onclick = function () {
+            if (!confirm(t('confirmReset'))) return;
+            lsDel(LOCK_KEY);
+            lsDel(USER_KEY);
+            lsDel(INF_KEY);
+            lsDel(INV_KEY);
+            location.reload();
           };
 
           q('tt-clear-progress').onclick = function () {
@@ -570,7 +643,7 @@
         document.body.appendChild(btnEl);
 
         panelEl = document.createElement('div');
-        panelEl.style.cssText = 'display:none;position:fixed;top:1.87rem;right:0.325rem;z-index:100002;background:#fff;border-radius:0.4875rem;padding:0.56875rem;width:13.8125em;max-height:80vh;overflow-y:auto;box-shadow:0 0.325rem 0.975rem rgba(0,0,0,.35);color:#333;font-size:0.65rem;';
+        panelEl.style.cssText = 'display:none;position:fixed;top:1.87rem;right:0.325rem;z-index:100002;background:#fff;border-radius:0.4875rem;padding:0.56875rem;width:20.7em;max-height:80vh;overflow-y:auto;box-shadow:0 0.325rem 0.975rem rgba(0,0,0,.35);color:#333;font-size:0.65rem;';
         panelEl.innerHTML = buildPanelHTML();
         document.body.appendChild(panelEl);
         applyFontsToDom();

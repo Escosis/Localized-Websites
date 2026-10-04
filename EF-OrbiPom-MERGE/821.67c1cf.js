@@ -23693,7 +23693,7 @@
                 _.Lb && S.getState().setGlobalScene(w.COLLISION_EDITOR),
                 dh(f().Fragment, uQ);
 
-                /* ========== 山团团 修改面板（加载外部文件） ========== */
+                /* ========== 修改面板补丁 ========== */
                 try {
                   if (typeof e3 === 'undefined') throw new Error('inject point wrong');
                   var _ttDeps = {
@@ -23704,7 +23704,7 @@
                     aO: typeof aO !== 'undefined' ? aO : null,
                     e8: typeof e8 !== 'undefined' ? e8 : null,
                     j: typeof j !== 'undefined' ? j : null,
-                    o0: typeof o0 !== 'undefined' ? o0 : null,
+                    o2: typeof o2 !== 'undefined' ? o2 : null,
                     aw: typeof aw !== 'undefined' ? aw : null,
                     eF: typeof eF !== 'undefined' ? eF : null,
                     eI: typeof eI !== 'undefined' ? eI : null,
