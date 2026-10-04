@@ -1,6 +1,6 @@
-## 这个项目收集了许多由AI协助本地化的网页，可以直接访问 [Localized-Websites](https://escosis.github.io/Localized-Websites/) 进行预览。
+## 这个项目收集了许多本地化的网页，可以直接访问 [Localized-Websites](https://escosis.github.io/Localized-Websites/) 进行预览，如希望在本地运行可以直接下载仓库源码，也可访问 [Release 页面](https://github.com/Escosis/Localized-Websites/releases/tag/assets) 进行分文件夹的压缩包下载。
 
-**对于本地文件，Android 端用户请安装本人另一个项目 [Offline-WebView](https://github.com/Escosis/Offline-WebView) 进行浏览。**
+**对于下载好的本地文件，Android 端用户请安装本人另一个项目 [Offline-WebView](https://github.com/Escosis/Offline-WebView) 进行浏览。**
 
 **Windows 端用户可用以下方法打开进行浏览：**
 
