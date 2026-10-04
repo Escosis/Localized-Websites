@@ -1,5 +1,5 @@
 /* =====================================================
- * 山团团 修改面板
+ * 修改面板
  * 由 821.67c1cf.js 在 dh(f().Fragment, uQ); 之后动态加载
  * 通过 window.__TT_PANEL__.init(deps) 注入依赖
  * ===================================================== */
@@ -13,6 +13,7 @@
   var USER_KEY = 'tt-user-info';
   var INF_KEY = 'tt-infinite-energy';
   var INV_KEY = 'tt-invincible';
+  var HIGHSCORE_KEY = 'tt-high-score';
 
   /* ---------- i18n ---------- */
   var PT = {
@@ -44,7 +45,7 @@
       remove: '移除面板',
       defaultNickname: '管理员',
       confirmClear: '确定要清除所有数据吗？包括设置、进度、教程状态。清空后页面将自动刷新。',
-      confirmReset: '确定要恢复默认设置吗？仅清除设置项（用户信息、无限技力、无敌、锁定等级），不影响任务进度。页面将自动刷新。',
+      confirmReset: '确定要恢复默认设置吗？仅清除设置项（用户信息、无限技力、无敌、锁定等级、历史最高分），不影响任务进度。页面将自动刷新。',
       confirmLang: '切换游戏语言后将重新加载页面，是否继续？'
     },
     'en-us': {
@@ -75,7 +76,7 @@
       remove: 'Remove Panel',
       defaultNickname: 'Endmin',
       confirmClear: 'Clear ALL data? Settings, progress, tutorial state. Page will reload.',
-      confirmReset: 'Reset all settings? (user info, infinite skill, invincible, level lock) Progress is unaffected. Page will reload.',
+      confirmReset: 'Reset all settings? (user info, infinite skill, invincible, level lock, high score) Progress is unaffected. Page will reload.',
       confirmLang: 'Page will reload with new language. Continue?'
     }
   };
@@ -123,6 +124,37 @@
         var eF = D.eF;
         var eI = D.eI;
         var getIH = D.getIH || function () { return null; };
+        var getEq = D.getEq || function () { return null; };
+        var setEq = D.setEq || function () {};
+
+        /* ---------- hook 排行榜：按分数降序重排 ---------- */
+        try {
+          var _origEq = getEq();
+          if (typeof _origEq === 'function') {
+            setEq(function () {
+              return _origEq().then(function (res) {
+                if (!res || res.code !== 0 || !res.data || !Array.isArray(res.data.list)) return res;
+                var list = res.data.list.slice();
+                list.sort(function (a, b) { return (b.score || 0) - (a.score || 0); });
+                var newList = list.map(function (x, i) {
+                  return Object.assign({}, x, { rank: i + 1 });
+                });
+                var self = res.data.self || {};
+                var selfRank = newList.length;
+                for (var i = 0; i < newList.length; i++) {
+                  if (newList[i].isNpc !== true) { selfRank = i + 1; break; }
+                }
+                return {
+                  code: 0,
+                  data: {
+                    list: newList,
+                    self: Object.assign({}, self, { rank: selfRank })
+                  }
+                };
+              });
+            });
+          }
+        } catch (e) { console.warn('[TT-Panel] hook eq failed', e); }
 
         /* ---------- 无敌：hook 越线检测 ---------- */
         try {
@@ -178,11 +210,12 @@
         })();
 
         /* ---------- 排行榜 mock 同步 ---------- */
-        function syncMockSelf(nick, avatar) {
+        function syncMockSelf(nick, avatar, score) {
           try {
             if (eF) {
               if (nick !== undefined && nick !== null) eF.nickname = nick;
               if (avatar !== undefined) eF.avatar = avatar;
+              if (score !== undefined && score !== null) eF.score = score;
             }
           } catch (e) {}
           try {
@@ -205,7 +238,7 @@
           } catch (e) {}
         }
 
-        /* ---------- 启动：应用已保存的用户信息 / 无限技力 / 无敌 ---------- */
+        /* ---------- 启动：应用已保存的用户信息 / 无限技力 / 无敌 / 历史最高分 ---------- */
         try {
           var _su = lsGetJSON(USER_KEY, null);
           if (_su) {
@@ -228,6 +261,16 @@
         try {
           if (lsGet(INV_KEY) === '1') {
             tA.setState({ invincible: true });
+          }
+        } catch (e) {}
+        try {
+          var _hs = lsGet(HIGHSCORE_KEY);
+          if (_hs !== null) {
+            var _hsn = parseInt(_hs, 10);
+            if (isFinite(_hsn) && _hsn >= 0) {
+              e3.setState({ highScore: _hsn });
+              if (eF) eF.score = _hsn;
+            }
           }
         } catch (e) {}
 
@@ -521,7 +564,12 @@
               e3.setState(patch);
               q(id).value = v;
               if (id === 'tt-next' && lockLevel.on) { lockLevel.next = v; saveLock(); }
-              if (id === 'tt-high') { ttTotal.highScore = Math.max(ttTotal.highScore, v); saveTT(); }
+              if (id === 'tt-high') {
+                ttTotal.highScore = Math.max(ttTotal.highScore, v);
+                saveTT();
+                lsSet(HIGHSCORE_KEY, String(v));
+                try { if (eF) eF.score = v; } catch (e) {}
+              }
               var ih = getIH();
               if (ih && ih.refreshPreview) { try { ih.refreshPreview(); } catch (e) {} }
             };
@@ -609,6 +657,7 @@
             lsDel(USER_KEY);
             lsDel(INF_KEY);
             lsDel(INV_KEY);
+            lsDel(HIGHSCORE_KEY);
             location.reload();
           };
 

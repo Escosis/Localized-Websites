@@ -23693,7 +23693,7 @@
                 _.Lb && S.getState().setGlobalScene(w.COLLISION_EDITOR),
                 dh(f().Fragment, uQ);
 
-                /* ========== 修改面板补丁 ========== */
+                /* ========== 修改面板注入 ========== */
                 try {
                   if (typeof e3 === 'undefined') throw new Error('inject point wrong');
                   var _ttDeps = {
@@ -23708,7 +23708,9 @@
                     aw: typeof aw !== 'undefined' ? aw : null,
                     eF: typeof eF !== 'undefined' ? eF : null,
                     eI: typeof eI !== 'undefined' ? eI : null,
-                    getIH: function () { return typeof ih !== 'undefined' ? ih : null; }
+                    getIH: function () { return typeof ih !== 'undefined' ? ih : null; },
+                    getEq: function () { return typeof eq !== 'undefined' ? eq : null; },
+                    setEq: function (fn) { try { eq = fn; } catch (e) {} }
                   };
                   var _ttTryInit = function () {
                     if (window.__TT_PANEL__ && typeof window.__TT_PANEL__.init === 'function') {
@@ -23733,7 +23735,7 @@
                 } catch (err) {
                   console.error('[TT-Panel] bootstrap failed', err);
                 }
-                /* ========== 补丁结束 ========== */
+                /* ========== 注入结束 ========== */
 
                 
             }),
