@@ -627,9 +627,6 @@
             if (lockLevel.on) {
               var v = Math.max(1, Math.min(11, parseInt(q('tt-next').value, 10) || 1));
               lockLevel.next = v;
-              e3.setState({ current: v, next: v });
-              var ih = getIH();
-              if (ih && ih.refreshPreview) { try { ih.refreshPreview(); } catch (e) {} }
             }
             saveLock();
           };
