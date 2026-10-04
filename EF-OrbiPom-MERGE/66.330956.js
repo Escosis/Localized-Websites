@@ -1,0 +1,54 @@
+/*! Copyright (C) 2017 - 2026 HYPERGRYPH. All rights reserved. */
+!(function () {
+  try {
+    var e =
+      "u" > typeof window
+        ? window
+        : "u" > typeof global
+        ? global
+        : "u" > typeof globalThis
+        ? globalThis
+        : "u" > typeof self
+        ? self
+        : {};
+    e.SENTRY_RELEASE = { id: "v1d5-synthesize-tuantuan-web@1.1.2" };
+    var a = new e.Error().stack;
+    a &&
+      ((e._sentryDebugIds = e._sentryDebugIds || {}),
+      (e._sentryDebugIds[a] = "f7a84bb4-a687-435b-8eb0-1f1f13c8bc6c"),
+      (e._sentryDebugIdIdentifier =
+        "sentry-dbid-f7a84bb4-a687-435b-8eb0-1f1f13c8bc6c"));
+  } catch (e) {}
+})();
+("use strict");
+(self.webpackChunkv1d5_synthesize_tuantuan_web =
+  self.webpackChunkv1d5_synthesize_tuantuan_web || []).push([
+  ["66"],
+  {
+    17403: function (e, a, o) {
+      e.exports = o.p + "assets/imgs/logo-h.ee2a87.svg";
+    },
+    55276: function (e, a, o) {
+      e.exports = o.p + "assets/imgs/logo.58540a.svg";
+    },
+    63025: function (e, a, o) {
+      o.r(a),
+        o.d(a, {
+          locale: function () {
+            return s;
+          },
+        });
+      var r = o(61402),
+        t = JSON.parse(
+          '{"biz":{"meta":{"title":"OrbiPom! COMBINAR!","keywords":"","description":""},"common":{"return":""},"account":{"login":"","switch_role":"","logout":"","confirm_logout":""},"msg":{"server_error":"","claim_failed":"Falha ao resgatar recompensa. Tente novamente mais tarde.","image_save_unsupported":"N\xe3o \xe9 poss\xedvel salvar imagens no seu dispositivo no ambiente de jogo atual. Fa\xe7a uma captura de tela ou use outro dispositivo."},"scene_loading":{"connecting":"","loading":"Carregando..."},"scene_main":{"title":"","greeting":"","not_logged_in":"","go_extra":""},"scene_extra":{"title":"","desc":""},"scene_carousel":{"title":"","open_game":"","enter_activity":""},"game":{"score":"Score","merge_count":"Merges","high_score":"Best","back":"Back","next":"Next","collection":"Guide","toolbar":"Items","cost":"AP-{{n}}","golden_toast":"Merged the Golden Tuan!","exit_title":"Exit","exit_content":"Quit this run? Progress will be lost.","loading":"Loading...","skill":{"clear":"Pop","wind":"Blow","shake":"Shake","swap":"Swap"},"result":{"this_score":"Score","merge_times":"Merges","skill_times":"Skills","new_best":"New Best!","replay":"Play Again","share":"Share","win_title":"Golden Tuan Merged!","over_title":"Game Over"},"leaderboard":{"title":"Leaderboard","empty":"No ranking yet","loading":"Loading…"},"rules":{"title":"Rules","time_title":"Event Period","time_desc":"2026/06/01 12:00 (Server Time) – 2026/06/10 06:00 (UTC+8)","rule_title":"Event Rules","item_basic":"Basics: Tap above the playfield to drop fruit. Matching fruits merge into a larger one.","item_score":"Scoring: Larger fruits award more points. The goal is to create the “Watermelon.”","item_over":"Game Over: When the stack touches the red warning line, the run ends and the score is settled.","item_reward":"Rewards:","item_reward_1":"During the event, rankings use each player’s highest single-run score.","item_reward_2":"After the event, the top 10 players receive exclusive rewards (delivered within 3 business days)."},"reward":{"title":"Rewards","claim":"Claim","claimed":"Claimed","cond":"Reach {{n}} pts","tier1":"Starter","tier2":"Advanced","tier3":"Master"},"share":{"title":"Share","copy":"Copy Link","save":"Save Result","copied":"Link copied","copy_failed":"Copy failed","saved":"Image saved"},"settings":{"title":"Settings","sound":"Sound","rules":"Rules","view":"View"},"guide":{"s1_title":"Drag & Drop","s1_text":"Drag the tuan on top to aim, release to drop","s2_title":"Merge Same","s2_text":"Two identical tuans merge into a higher one","s3_title":"Use Skills","s3_text":"Charge AP by merging, then cast skills","next":"Next","start":"Start"}},"scene_game":{"score":"Pontua\xe7\xe3o","merge_count":"N\xfamero de Combina\xe7\xf5es","high_score":"Pontua\xe7\xe3o M\xe1xima","back":"Voltar","next":"Avan\xe7ar","collection":"Cole\xe7\xe3o","toolbar":"Barra de Habilidades","cost":"PH –{{n}}","cost_progress":"Total de PH Usado: {{n}}/{{m}}","golden_toast":"Voc\xea encontrou o Endmin de Ouro!","restart_game":"Reiniciar Jogo","submit_game":"Encerrar Jogo","skill":{"clear":"Fazer","wind":"Protocolo: Levitar","shake":"Vamos Agitar!","swap":"Troca Predestinada"},"skill_desc":{"clear":"Fa\xe7a o que tem que ser feito!","wind":"Esterilizem esta \xe1rea!","shake":"A\xed vou eu!","swap":"Confiem na orienta\xe7\xe3o do destino!"},"skill_tip":{"clear":"Clique em um OrbiPom para remover.","wind":"Clique em qualquer lugar para jogar os OrbiPoms para cima.","shake":"Clique em qualquer lugar para come\xe7ar a agitar.","swap":"Selecione dois OrbiPoms quaisquer para troc\xe1-los."},"energy_insufficient":"PH Insuficiente"},"modal_confirm":{"exit_title":"Sair Agora?","exit_content":"O jogo ainda est\xe1 em andamento. Sair agora finalizar\xe1 sua pontua\xe7\xe3o e o progresso no jogo.","go_to_complete_title":"Concluir Agora","go_to_complete_desc":"Voc\xea precisa iniciar um novo jogo para concluir esta miss\xe3o. Iniciar agora?","confirm_exit_title":"Sair Agora?","confirm_exit_desc":"Sair deste evento?","confirm_restart_title":"Reiniciar Jogo?","confirm_restart_desc":"O jogo ainda est\xe1 em andamento. Reiniciar encerrar\xe1 este jogo, finalizar\xe1 sua pontua\xe7\xe3o e o progresso e iniciar\xe1 um novo jogo.","confirm_submit_title":"Encerrar Jogo?","confirm_submit_desc":"O jogo ainda est\xe1 em andamento. Encerr\xe1-lo agora finalizar\xe1 sua pontua\xe7\xe3o e o progresso no jogo.","share_confirm_submit_desc":"Voc\xea deve encerrar seu jogo antes de gerar uma imagem para compartilhar. Encerrar agora e finalizar sua pontua\xe7\xe3o atual?"},"scene_result":{"this_score":"Pontua\xe7\xe3o","max_synth":"Melhor Combina\xe7\xe3o","skill_times":"N\xfamero de Conjura\xe7\xf5es de Habilidade","replay":"Jogar Novamente","share":"Compartilhar Pontua\xe7\xe3o","win_title":"Voc\xea encontrou o Endmin de Ouro!","over_title":"Fim de Jogo"},"modal_leaderboard":{"pause_desc":"Jogo Pausado","continue":"Retomar","title":"Placar","empty":"Nenhuma classifica\xe7\xe3o ainda"},"modal_rule":{"title":"Regras do Evento","time_title":"Hora do Evento","time_desc":"1\xba de junho de 2026 \xe0s 12h (hor\xe1rio do servidor) – 10 de junho de 2026 \xe0s 6h (UTC+8)","join_title":"Requisitos de Participa\xe7\xe3o","join_desc":"Ap\xf3s o desbloqueio do Centro de Eventos","play_title":"Regras do Evento","play_desc":"Combine OrbiPoms dos mesmos tipos para criar OrbiPoms maiores e ganhar pontos e recompensas generosas.","notice_title":"Notas Importantes Sobre o Evento","notice_1":"Durante o evento, voc\xea ser\xe1 classificado em rela\xe7\xe3o aos seus amigos com base na sua melhor pontua\xe7\xe3o de todos os tempos, e as 25 melhores pontua\xe7\xf5es ser\xe3o mostradas no placar.","notice_2":"Ap\xf3s voc\xea concluir as miss\xf5es e resgatar as recompensas, elas ser\xe3o distribu\xeddas via correio do jogo. N\xe3o demore para resgat\xe1-las, pois as mensagens de recompensas expiram em 30 dias.","play_desc_2":"Combinar OrbiPoms concede PH que voc\xea pode gastar para conjurar habilidades. Quando as coisas ficarem complicadas, use as habilidades estrategicamente para virar o jogo."},"modal_reward":{"title":"Recompensa da Miss\xe3o","go":"Ir","claim":"Resgatar","claimed":"Resgatada","claim_all":"Resgatar Tudo","completed_toast":"Recompensas j\xe1 resgatadas","claim_title":"Resgatada com \xcaxito","claim_continue":"Clique para Continuar","claim_accept":"Aceitar","mail_sent":"Enviada para seu correio no jogo","task":{"merge":"Combinar OrbiPom {{target}} vez(es)","skill":"Usar habilidades {{target}} vez(es)","high_score":"Alcan\xe7ar uma pontua\xe7\xe3o m\xe1xima de {{target}}","share":"Compartilhar {{target}} vez(es)","golden_admin":"Criar Endmin de Ouro {{target}} vez(es)"}},"modal_share":{"prompt":"Participe do evento para ganhar <br>Ourubis<br> e muito mais","title":"Compartilhar Pontua\xe7\xe3o","save":"Salvar Resultados"},"guide":{"s1_title":"Combine e Cres\xe7a!","s1_text":"Acumule OrbiPoms. Ao se tocarem, dois OrbiPoms compat\xedveis se combinam em um maior.","s2_title":"Encontre o Endmin de Ouro","s2_text":"Existem 11 OrbiPoms diferentes no total. Consulte a Cole\xe7\xe3o para rastrear o Endmin de Ouro.","s3_title":"Preste aten\xe7\xe3o \xe0 Linha de Alerta!","s3_text":"Acumule de forma estrat\xe9gica. O jogo terminar\xe1 se a pilha exceder a linha de alerta por 3 segundos.","s4_title":"Use Suas Habilidades","s4_text":"Ganhe PH combinando OrbiPoms e, em seguida, gaste-os para conjurar habilidades. Use-as com sabedoria para recuperar o controle quando o tabuleiro ficar bagun\xe7ado!","s5_title":"Soltar um OrbiPom","s5_text":"Clique em qualquer lugar na tela para soltar seu primeiro OrbiPom. Vamos Jogar!","next":"Avan\xe7ar","start":"Jogar"},"npc":{"npc_01":"Akekuri","npc_02":"Estella","npc_03":"Fluorite","npc_04":"Purrchena","npc_05":"Typhoeus"}},"general":{"common":{"copy":"Copiar","copy_url":"Copiar link","paste":"Colar","share":"Compartilhar","close":"Fechar","confirm":"Confirmar","cancel":"Cancelar","tap_blank_to_close":"Clique fora para fechar","long_tap_to_save":"Pressione e segure para salvar a imagem","click_to_save":"Clique para salvar a imagem","return_to_homepage":"Voltar para In\xedcio","msg":{"loading":"Carregando...","network_error":"Erro de rede","copy_success":"Copiado com \xcaxito","copy_failed":"Falha na c\xf3pia","url_copy_success":"Link copiado","url_copy_failed":"Falha ao copiar link","share_success":"\xcaxito ao compartilhar","share_failed":"Falha ao compartilhar","auth_failed":"Falha no login","params_error":"Erro de par\xe2metro","network_issue":"Erro de rede. Tente mais tarde.","auth_expired":"O login expirou. Fa\xe7a login novamente.","request_too_fast":"Excesso de tentativas. Tente mais tarde.","char_error":"Erro no status atual do personagem do jogo","account_error":"Erro no status atual da Conta Gryphline","char_error_retry":"Erro nas informa\xe7\xf5es do personagem. Tente mais tarde.","network_error_retry":"Erro de rede. Atualize e tente novamente."}},"activity":{"act_ended":"O evento terminou.","act_not_start":"O evento ainda n\xe3o come\xe7ou.","msg":{"image_saved":"Imagem salva em {{path}}"}},"gamepad":{"keyhint":{"confirm":"Confirmar","close":"Fechar","close_current_page":"Fechar esta p\xe1gina","exit_page":"Sair da p\xe1gina","claim_all":"Resgatar Tudo","go_to_complete":"Ir","claim":"Resgatar","move":"Mover","scroll":"Rolar","continue":"Retomar","back":"Voltar","next":"Avan\xe7ar","drop":"Soltar"}},"reward":{"claim_success":"Resgatado com sucesso!"}}}'
+        ),
+        s = {
+          lang: r.ELanguage["pt-br"],
+          text: t,
+          fonts: {},
+          logoH: o(17403),
+          logo: o(55276),
+        };
+    },
+  },
+]);
