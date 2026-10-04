@@ -19861,7 +19861,8 @@
               r !== p.Platform.PlayStation &&
                 (ix(),
                 (cV = !0),
-                r === p.Platform.Unknown
+                //r === p.Platform.Unknown
+                (r === p.Platform.Unknown || r === p.Platform.Web) // 将 Web 归入“无原生壳”分支
                   ? tT
                     ? null === rY.O ||
                       void 0 === rY.O ||
