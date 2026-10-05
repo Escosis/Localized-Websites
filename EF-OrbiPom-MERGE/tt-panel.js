@@ -485,6 +485,7 @@
             '.tt-gap{margin-top:0.5em;margin-bottom:0.5em;height:1px;background:#eee}',
             '.tt-checks{margin-top:0.375em;margin-bottom:0.375em;display:flex;flex-direction:column;gap:0.25em;font-size:0.75em;}',
             '.tt-checks label{display:flex;align-items:center;gap:0.375em;padding:0.3125em;border-radius:0.25em;background:#f7f7f7;cursor:pointer;}',
+            '.tt-checks input[type="checkbox"]{width:1em;height:1em;min-width:1em;max-width:1em;margin:0;padding:0;flex-shrink:0;appearance:auto;-webkit-appearance:checkbox;box-sizing:border-box;}',
             '.tt-btnrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0.375em;margin-top:0.375em}',
             '.tt-grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0.3125em 0.5em}',
             '.tt-grid2 .tt-row{margin-bottom:0}',
@@ -729,7 +730,7 @@
         document.body.appendChild(btnEl);
 
         panelEl = document.createElement('div');
-        panelEl.style.cssText = 'display:none;position:fixed;top:1.87rem;right:0.325rem;z-index:100002;background:#fff;border-radius:0.4875rem;padding:0.56875rem;width:20.7em;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain;box-shadow:0 0.325rem 0.975rem rgba(0,0,0,.35);color:#333;font-size:0.65rem;';
+        panelEl.style.cssText = 'display:none;position:fixed;top:1.87rem;right:0.325rem;z-index:100002;background:#fff;border-radius:0.4875rem;padding:0.56875rem;width:20.7em;max-height:80vh;overflow-y:auto;box-shadow:0 0.325rem 0.975rem rgba(0,0,0,.35);color:#333;font-size:0.65rem;';
         panelEl.innerHTML = buildPanelHTML();
         document.body.appendChild(panelEl);
         applyFontsToDom();
