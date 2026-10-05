@@ -564,9 +564,6 @@
         function bindPanelEvents() {
           var q = function (id) { return document.getElementById(id); };
 
-          ['pointerdown', 'mousedown', 'touchstart'].forEach(function (ev) {
-            panelEl.addEventListener(ev, function (e) { e.stopPropagation(); }, false);
-          });
           q('tt-lang').onchange = function () {
             var sel = this;
             var lang = sel.value;
