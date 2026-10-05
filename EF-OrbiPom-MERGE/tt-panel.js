@@ -171,136 +171,105 @@
           }
         } catch (e) { console.warn('[TT-Panel] patch invincible failed', e); }
         
-        /* ---------- 手机触屏修复：touch 优先 + 缓存 rect ---------- */
+        /* ---------- 手机触屏修复 v2 ---------- */
         try {
-          var LOGICAL_W = 380;   // 230 + 2*75
-          var LOGICAL_H = 435;   // 280 + 90 + 45 + 20
-          var OFFSET_X = 75;     // ey.canvasPadX
-          var OFFSET_Y = 135;    // ey.dropZoneHeight + ey.canvasPadTop
-
-          function inBounds(x, y) {
-            return x >= 0 && x <= 230 && y >= 0 && y <= 280;
-          }
-
-          function patchRenderer(renderer) {
-            if (!renderer || renderer.__ttPatched) return;
-            renderer.__ttPatched = true;
-            renderer.toWorldX = function (e) {
-              var rect = this.__ttRect || this.canvas.getBoundingClientRect();
-              var scale = rect.width / LOGICAL_W || 1;
-              return (e - rect.left) / scale - OFFSET_X;
-            };
-            renderer.toWorldY = function (e) {
-              var rect = this.__ttRect || this.canvas.getBoundingClientRect();
-              var scale = rect.height / LOGICAL_H || 1;
-              return (e - rect.top) / scale - OFFSET_Y;
-            };
-          }
-
           function patchInput(ih) {
             if (!ih || !ih.inputTarget || ih.__ttInputPatched) return;
-            patchRenderer(ih.renderer);
             ih.__ttInputPatched = true;
             var target = ih.inputTarget;
-
-            try {
-              target.removeEventListener('pointermove', ih.onPointerMove);
-              target.removeEventListener('pointerup', ih.onPointerUp);
-              target.removeEventListener('pointerdown', ih.onPointerMove);
-            } catch (e) {}
 
             target.style.touchAction = 'none';
             target.style.webkitUserSelect = 'none';
             target.style.userSelect = 'none';
 
+            // 摘掉游戏原生的 pointer 监听，避免双重触发
+            try {
+              target.removeEventListener('pointerdown', ih.onPointerMove);
+              target.removeEventListener('pointermove', ih.onPointerMove);
+              target.removeEventListener('pointerup', ih.onPointerUp);
+              target.removeEventListener('mousemove', ih.onVirtualMouseMove);
+            } catch (x) {}
+
             var activeId = null;
+            var lastAt = 0, lastX = 0, lastY = 0;
 
-            function getTouch(e) {
-              if (activeId === null) return null;
-              for (var i = 0; i < e.touches.length; i++) {
-                if (e.touches[i].identifier === activeId) return e.touches[i];
+            // 25ms 内相同坐标忽略，防止 touch/pointer 双发
+            function dedup(x, y) {
+              var now = performance.now();
+              if (now - lastAt < 25 && Math.abs(x - lastX) < 1 && Math.abs(y - lastY) < 1) return false;
+              lastAt = now; lastX = x; lastY = y; return true;
+            }
+
+            function move(x, y) {
+              if (!dedup(x, y)) return;
+              ih.handlePointerMove(x, y);
+            }
+
+            function end(x, y) {
+              activeId = null;
+              // ⚠️ 用游戏原版 toWorldX/Y 的算法（都用宽度算 scale）
+              var rect = ih.renderer.canvas.getBoundingClientRect();
+              var scale = rect.width / 380 || 1;
+              var n = (x - rect.left) / scale - 75;
+              var i2 = (y - rect.top) / scale - 135;
+              var g = e3.getState();
+              if (!g || g.state !== 'playing' || g.paused) return;
+              var canceled = ih.skillController.pointerUp(n, i2);
+              var inB = n >= 0 && n <= 230 && i2 >= 0 && i2 <= 280;
+              if (!canceled && inB && performance.now() >= ih.dropLockUntil) {
+                ih.drop(ih.clampX(n));
               }
-              return null;
-            }
-            function captureRect() {
-              try { ih.renderer.__ttRect = ih.renderer.canvas.getBoundingClientRect(); } catch (x) {}
-            }
-            function releaseRect() {
-              try { ih.renderer.__ttRect = null; } catch (x) {}
             }
 
-            function onStart(e) {
-              if (!e.touches || e.touches.length === 0) return;
-              e.preventDefault();
-              e.stopPropagation();
+            // 触摸：capture 阶段独吞
+            target.addEventListener('touchstart', function (e) {
+              e.preventDefault(); e.stopImmediatePropagation();
+              if (!e.touches.length) return;
               var t = e.touches[0];
               activeId = t.identifier;
-              captureRect();
-              ih.handlePointerMove(t.clientX, t.clientY);
-            }
-            function onMove(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              var t = getTouch(e);
-              if (t) ih.handlePointerMove(t.clientX, t.clientY);
-            }
-            function onEnd(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              var t = null;
-              if (activeId !== null && e.changedTouches) {
-                for (var i = 0; i < e.changedTouches.length; i++) {
-                  if (e.changedTouches[i].identifier === activeId) { t = e.changedTouches[i]; break; }
-                }
-              }
-              if (!t && e.changedTouches) t = e.changedTouches[0];
-              activeId = null;
-              if (t) {
-                var n = ih.renderer.toWorldX(t.clientX);
-                var i2 = ih.renderer.toWorldY(t.clientY);
-                var g = e3.getState();
-                if (g && g.state === 'playing' && !g.paused) {
-                  var canceled = ih.skillController.pointerUp(n, i2);
-                  if (!canceled && inBounds(n, i2) && performance.now() >= ih.dropLockUntil) {
-                    ih.drop(ih.clampX(n));
-                  }
-                }
-              }
-              releaseRect();
-            }
-            function onCancel() {
-              activeId = null;
-              releaseRect();
-            }
+              move(t.clientX, t.clientY);
+            }, true);
 
-            target.addEventListener('touchstart', onStart, { passive: false });
-            target.addEventListener('touchmove', onMove, { passive: false });
-            target.addEventListener('touchend', onEnd, { passive: false });
-            target.addEventListener('touchcancel', onCancel, { passive: false });
-
-            target.addEventListener('mousedown', function (e) {
-              if (e.pointerType && e.pointerType !== 'mouse') return;
-              captureRect();
-              ih.handlePointerMove(e.clientX, e.clientY);
-            });
-            target.addEventListener('mousemove', function (e) {
-              if (e.pointerType && e.pointerType !== 'mouse') return;
-              if (e.buttons !== 1) return;
-              ih.handlePointerMove(e.clientX, e.clientY);
-            });
-            target.addEventListener('mouseup', function (e) {
-              if (e.pointerType && e.pointerType !== 'mouse') return;
-              var n = ih.renderer.toWorldX(e.clientX);
-              var i2 = ih.renderer.toWorldY(e.clientY);
-              var g = e3.getState();
-              if (g && g.state === 'playing' && !g.paused) {
-                var canceled = ih.skillController.pointerUp(n, i2);
-                if (!canceled && inBounds(n, i2) && performance.now() >= ih.dropLockUntil) {
-                  ih.drop(ih.clampX(n));
-                }
+            target.addEventListener('touchmove', function (e) {
+              e.preventDefault(); e.stopImmediatePropagation();
+              if (activeId === null) return;
+              for (var i = 0; i < e.touches.length; i++) {
+                var t = e.touches[i];
+                if (t.identifier === activeId) { move(t.clientX, t.clientY); return; }
               }
-              releaseRect();
-            });
+            }, true);
+
+            target.addEventListener('touchend', function (e) {
+              e.preventDefault(); e.stopImmediatePropagation();
+              if (activeId === null) return;
+              for (var i = 0; i < e.changedTouches.length; i++) {
+                var t = e.changedTouches[i];
+                if (t.identifier === activeId) { end(t.clientX, t.clientY); return; }
+              }
+              if (e.changedTouches.length) {
+                end(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+              }
+            }, true);
+
+            target.addEventListener('touchcancel', function (e) {
+              e.preventDefault(); e.stopImmediatePropagation();
+              activeId = null;
+            }, true);
+
+            // 鼠标（PC）：capture 阶段
+            target.addEventListener('pointerdown', function (e) {
+              if (e.pointerType === 'touch') return;
+              move(e.clientX, e.clientY);
+            }, true);
+            target.addEventListener('pointermove', function (e) {
+              if (e.pointerType === 'touch') return;
+              if (e.pointerType === 'mouse' && e.buttons !== 1) return;
+              move(e.clientX, e.clientY);
+            }, true);
+            target.addEventListener('pointerup', function (e) {
+              if (e.pointerType === 'touch') return;
+              end(e.clientX, e.clientY);
+            }, true);
           }
 
           var _ttIh = getIH();
