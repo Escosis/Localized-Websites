@@ -170,17 +170,20 @@
             };
           }
         } catch (e) { console.warn('[TT-Panel] patch invincible failed', e); }
-        
-        /* ---------- 手机触摸：转发为 pointer ---------- */
+
+        /* ---------- 手机触摸：转发到 canvas ---------- */
         (function () {
           if (!window.PointerEvent) return;
           var MAP = { touchstart: 'pointerdown', touchmove: 'pointermove', touchend: 'pointerup', touchcancel: 'pointerup' };
           Object.keys(MAP).forEach(function (type) {
             document.addEventListener(type, function (e) {
               var t = e.changedTouches[0];
-              if (!t || !(e.target instanceof Element) || !e.target.closest('.cmi1Bf')) return;
+              if (!t) return;
+              if (!(e.target instanceof Element) || !e.target.closest('.cmi1Bf')) return;
               e.preventDefault();
-              e.target.dispatchEvent(new PointerEvent(MAP[type], {
+              var canvas = document.querySelector('.cmi1Bf canvas');
+              if (!canvas) return;
+              canvas.dispatchEvent(new PointerEvent(MAP[type], {
                 clientX: t.clientX, clientY: t.clientY,
                 bubbles: true, cancelable: true,
                 pointerId: 1, isPrimary: true
