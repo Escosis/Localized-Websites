@@ -726,12 +726,12 @@
         btnEl = document.createElement('div');
         btnEl.innerText = t('openBtn');
         btnEl.style.cssText = 'position:fixed;top:0.325rem;right:0.325rem;z-index:100001;background:#ffb347;color:#fff;border-radius:0.325rem;padding:0.25rem 0.5rem;font-size:0.528rem;font-weight:bold;cursor:pointer;box-shadow:0 0.1625rem 0.4875rem rgba(0,0,0,.35);user-select:none;';
-        document.documentElement.appendChild(btnEl);
+        document.body.appendChild(btnEl);
 
         panelEl = document.createElement('div');
-        panelEl.style.cssText = 'display:none;position:fixed;top:1.87rem;right:0.325rem;z-index:100002;background:#fff;border-radius:0.4875rem;padding:0.56875rem;width:20.7em;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain;box-shadow:0 0.325rem 0.975rem rgba(0,0,0,.35);color:#333;font-size:0.65rem;';
+        panelEl.style.cssText = 'display:none;position:fixed;top:1.87rem;right:0.325rem;z-index:100002;background:#fff;border-radius:0.4875rem;padding:0.56875rem;width:20.7em;max-height:80vh;overflow-y:auto;box-shadow:0 0.325rem 0.975rem rgba(0,0,0,.35);color:#333;font-size:0.65rem;';
         panelEl.innerHTML = buildPanelHTML();
-        document.documentElement.appendChild(panelEl);
+        document.body.appendChild(panelEl);
         applyFontsToDom();
         bindPanelEvents();
 
