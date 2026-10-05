@@ -14,6 +14,29 @@
     <title>融合！山团团！</title>
     <meta name="description" />
     <meta name="keywords" />
+    <style>
+      /* ====== 手机触屏适配 ====== */
+      html, body {
+        overscroll-behavior: none;
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      [data-tutorial-id="game-container"],
+      [data-tutorial-id="game-container"] *,
+      canvas {
+        touch-action: none !important;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      input, textarea, select {
+        -webkit-user-select: text;
+        user-select: text;
+        touch-action: auto;
+      }
+    </style>
     <link
       href="favicon-hg.ico"
       rel="icon"
