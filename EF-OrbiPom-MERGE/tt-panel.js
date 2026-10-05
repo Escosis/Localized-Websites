@@ -155,6 +155,80 @@
             });
           }
         } catch (e) { console.warn('[TT-Panel] hook eq failed', e); }
+        
+        /* ---------- 竖屏旋转坐标修正 ---------- */
+        var RT_PAD_X = 75;   // ey.canvasPadX
+        var RT_PAD_Y = 135;  // ey.dropZoneHeight + ey.canvasPadTop
+        var RT_W = 230;      // ey.container.width
+        var RT_H = 280;      // ey.container.height
+        function rtIsRotated() {
+          return !!(document.body && document.body.dataset && document.body.dataset.rotate === "1");
+        }
+        function rtWorld(renderer, clientX, clientY) {
+          var r = renderer.canvas.getBoundingClientRect();
+          var t = RT_W + 2 * RT_PAD_X;
+          var w = rtIsRotated() ? r.height : r.width;
+          var s = w / t || 1;
+          if (rtIsRotated()) {
+            return { x: (r.top + r.height - clientY) / s - RT_PAD_X, y: (clientX - r.left) / s - RT_PAD_Y };
+          }
+          return { x: (clientX - r.left) / s - RT_PAD_X, y: (clientY - r.top) / s - RT_PAD_Y };
+        }
+        function rtInWorld(x, y) { return x >= 0 && x <= RT_W && y >= 0 && y <= RT_H; }
+        function rtPatch(ih) {
+          if (!ih || ih.__ttRotatePatched) return;
+          var renderer = ih.renderer;
+          if (!renderer || !renderer.canvas) return;
+          // 从原方法反推 PAD 值（防止常量漂移），只在非旋转态下做
+          try {
+            if (!rtIsRotated()) {
+              var _ox = renderer.toWorldX.bind(renderer);
+              var _oy = renderer.toWorldY.bind(renderer);
+              var rect = renderer.canvas.getBoundingClientRect();
+              var px = -_ox(rect.left);
+              var py = -_oy(rect.top);
+              if (isFinite(px) && px > 0 && px < 1000) RT_PAD_X = px;
+              if (isFinite(py) && py > 0 && py < 1000) RT_PAD_Y = py;
+            }
+          } catch (e) {}
+          ih.__ttRotatePatched = true;
+
+          // 替换 handlePointerMove（原型方法，直接赋实例属性即可生效）
+          ih.handlePointerMove = function (clientX, clientY) {
+            var st = e3.getState();
+            if ("playing" !== st.state || st.paused) return;
+            var w = rtWorld(renderer, clientX, clientY);
+            var x = w.x, y = w.y;
+            if (!ih.skillController.pointerMove(x, y) && rtInWorld(x, y)) {
+              ih.movePreview(ih.clampX(x));
+            }
+          };
+
+          // 替换 onPointerUp（实例上的箭头函数，需重绑事件）
+          var oldUp = ih.onPointerUp;
+          var newUp = function (e) {
+            var st = e3.getState();
+            if ("playing" !== st.state || st.paused) return;
+            var w = rtWorld(renderer, e.clientX, e.clientY);
+            var x = w.x, y = w.y;
+            if (ih.skillController.pointerUp(x, y)) return;
+            if (!rtInWorld(x, y)) return;
+            if (performance.now() < ih.dropLockUntil) return;
+            ih.drop(ih.clampX(x));
+          };
+          ih.onPointerUp = newUp;
+          if (ih.inputTarget) {
+            try { ih.inputTarget.removeEventListener("pointerup", oldUp); } catch (e) {}
+            try { ih.inputTarget.addEventListener("pointerup", newUp); } catch (e) {}
+          }
+        }
+        // 每次游戏重开都会新建 o2 实例，轮询并 patch
+        setInterval(function () {
+          var ih = getIH();
+          if (ih && !ih.__ttRotatePatched) {
+            try { rtPatch(ih); } catch (e) { console.warn("[TT-Panel] rotate patch failed", e); }
+          }
+        }, 200);
 
         /* ---------- 无敌：hook 越线检测 ---------- */
         try {
@@ -169,7 +243,7 @@
               return _origCGO.call(this, e);
             };
           }
-        } catch (e) { console.warn('[TT-Panel] patch invincible failed', e); }
+        } catch (e) { console.warn('[TT-Panel] patch invincible failed', e); }    }
 
         /* ---------- 面板语言：初始由游戏语言决定，可手动改但不存储 ---------- */
         function resolvePanelLang() {

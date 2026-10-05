@@ -23048,12 +23048,11 @@
                 );
               }, [c]),
               (0, m.jsx)(u$.Oi, {
-                //inRotate:
-                  //((r = window.navigator.userAgent),
-                  //!!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-                    //r
-                  //) && void 0),
-                inRotate: !1, // 禁用假横屏导致坐标错乱
+                inRotate:
+                  ((r = window.navigator.userAgent),
+                  !!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+                    r
+                  ) && void 0),
                 children: (0, m.jsxs)(u$.Oy, {
                   children: [
                     (0, m.jsx)(u3, {
