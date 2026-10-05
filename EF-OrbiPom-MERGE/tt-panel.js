@@ -157,44 +157,42 @@
         } catch (e) { console.warn('[TT-Panel] hook eq failed', e); }
 
         /* ---------- 竖屏旋转坐标修正 ---------- */
-        try {
-          setInterval(function () {
-            var ih = getIH();
-            if (!ih || ih.__rtPatched || !ih.renderer || !ih.renderer.canvas) return;
-            ih.__rtPatched = 1;
-            var R = ih.renderer, PX = 75, PY = 135, W = 230, H = 280;
-            var toW = function (cx, cy) {
-              var r = R.canvas.getBoundingClientRect();
-              var rot = document.body && document.body.dataset && document.body.dataset.rotate === "1";
-              var s = (rot ? r.height : r.width) / (W + 2 * PX) || 1;
-              return rot
-                ? { x: (r.top + r.height - cy) / s - PX, y: (cx - r.left) / s - PY }
-                : { x: (cx - r.left) / s - PX, y: (cy - r.top) / s - PY };
-            };
-            var inW = function (p) { return p.x >= 0 && p.x <= W && p.y >= 0 && p.y <= H; };
+        setInterval(function () {
+          var ih = getIH();
+          if (!ih || ih.__rtPatched || !ih.renderer || !ih.renderer.canvas) return;
+          ih.__rtPatched = 1;
+          var R = ih.renderer, PX = 75, PY = 135, W = 230, H = 280;
+          var toW = function (cx, cy) {
+            var r = R.canvas.getBoundingClientRect();
+            var rot = document.body && document.body.dataset && document.body.dataset.rotate === "1";
+            var s = (rot ? r.height : r.width) / (W + 2 * PX) || 1;
+            return rot
+              ? { x: (r.top + r.height - cy) / s - PX, y: (cx - r.left) / s - PY }
+              : { x: (cx - r.left) / s - PX, y: (cy - r.top) / s - PY };
+          };
+          var inW = function (p) { return p.x >= 0 && p.x <= W && p.y >= 0 && p.y <= H; };
 
-            ih.handlePointerMove = function (cx, cy) {
-              var st = e3.getState();
-              if (st.state !== "playing" || st.paused) return;
-              var w = toW(cx, cy);
-              if (!ih.skillController.pointerMove(w.x, w.y) && inW(w)) ih.movePreview(ih.clampX(w.x));
-            };
+          ih.handlePointerMove = function (cx, cy) {
+            var st = e3.getState();
+            if (st.state !== "playing" || st.paused) return;
+            var w = toW(cx, cy);
+            if (!ih.skillController.pointerMove(w.x, w.y) && inW(w)) ih.movePreview(ih.clampX(w.x));
+          };
 
-            var _up = ih.onPointerUp;
-            ih.onPointerUp = function (e) {
-              var st = e3.getState();
-              if (st.state !== "playing" || st.paused) return;
-              var w = toW(e.clientX, e.clientY);
-              if (ih.skillController.pointerUp(w.x, w.y) || !inW(w)) return;
-              if (performance.now() < ih.dropLockUntil) return;
-              ih.drop(ih.clampX(w.x));
-            };
-            if (ih.inputTarget) {
-              ih.inputTarget.removeEventListener("pointerup", _up);
-              ih.inputTarget.addEventListener("pointerup", ih.onPointerUp);
-            }
-          }, 300);
-        } catch (e) { console.warn('[TT-Panel] rotate patch failed', e); }
+          var _up = ih.onPointerUp;
+          ih.onPointerUp = function (e) {
+            var st = e3.getState();
+            if (st.state !== "playing" || st.paused) return;
+            var w = toW(e.clientX, e.clientY);
+            if (ih.skillController.pointerUp(w.x, w.y) || !inW(w)) return;
+            if (performance.now() < ih.dropLockUntil) return;
+            ih.drop(ih.clampX(w.x));
+          };
+          if (ih.inputTarget) {
+            ih.inputTarget.removeEventListener("pointerup", _up);
+            ih.inputTarget.addEventListener("pointerup", ih.onPointerUp);
+          }
+        }, 300);
 
         /* ---------- 无敌：hook 越线检测 ---------- */
         try {
