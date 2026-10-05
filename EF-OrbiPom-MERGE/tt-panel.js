@@ -564,15 +564,9 @@
         function bindPanelEvents() {
           var q = function (id) { return document.getElementById(id); };
 
-          ['tt-lang', 'tt-panel-lang'].forEach(function (id) {
-            var s = q(id);
-            if (!s) return;
-            var stop = function (e) { e.stopPropagation(); };
-            s.addEventListener('mousedown', stop);
-            s.addEventListener('pointerdown', stop);
-            s.addEventListener('click', stop);
+          ['pointerdown', 'mousedown', 'touchstart'].forEach(function (ev) {
+            panelEl.addEventListener(ev, function (e) { e.stopPropagation(); }, false);
           });
-
           q('tt-lang').onchange = function () {
             var sel = this;
             var lang = sel.value;
