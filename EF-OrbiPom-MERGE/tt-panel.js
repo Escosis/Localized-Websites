@@ -168,7 +168,7 @@
               var rot = document.body && document.body.dataset && document.body.dataset.rotate === "1";
               var s = (rot ? r.height : r.width) / (W + 2 * PX) || 1;
               return rot
-                ? { x: (r.top + r.height - cy) / s - PX, y: (cx - r.left) / s - PY }
+                ? { x: (cy - r.top) / s - PX, y: (cx - r.left) / s - PY }
                 : { x: (cx - r.left) / s - PX, y: (cy - r.top) / s - PY };
             };
             var inW = function (p) { return p.x >= 0 && p.x <= W && p.y >= 0 && p.y <= H; };
