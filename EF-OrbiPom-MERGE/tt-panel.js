@@ -171,18 +171,27 @@
           }
         } catch (e) { console.warn('[TT-Panel] patch invincible failed', e); }
         
-        /* ---------- 手机触屏修复 v2 ---------- */
+        /* ---------- 手机触屏修复 ---------- */
         try {
           function patchInput(ih) {
             if (!ih || !ih.inputTarget || ih.__ttInputPatched) return;
             ih.__ttInputPatched = true;
             var target = ih.inputTarget;
 
+            // 1) 整页禁止触摸滚动：让 preventDefault 生效，消除 [Intervention] 警告
+            try {
+              document.documentElement.style.touchAction = 'none';
+              if (document.body) {
+                document.body.style.touchAction = 'none';
+                document.body.style.overscrollBehavior = 'none';
+                document.body.style.webkitTouchCallout = 'none';
+              }
+            } catch (x) {}
             target.style.touchAction = 'none';
             target.style.webkitUserSelect = 'none';
             target.style.userSelect = 'none';
 
-            // 摘掉游戏原生的 pointer 监听，避免双重触发
+            // 2) 摘掉游戏的 pointer / mousemove 监听（触摸时会被浏览器干扰）
             try {
               target.removeEventListener('pointerdown', ih.onPointerMove);
               target.removeEventListener('pointermove', ih.onPointerMove);
@@ -190,86 +199,58 @@
               target.removeEventListener('mousemove', ih.onVirtualMouseMove);
             } catch (x) {}
 
+            // 3) 用 touch 事件接管
             var activeId = null;
-            var lastAt = 0, lastX = 0, lastY = 0;
-
-            // 25ms 内相同坐标忽略，防止 touch/pointer 双发
-            function dedup(x, y) {
-              var now = performance.now();
-              if (now - lastAt < 25 && Math.abs(x - lastX) < 1 && Math.abs(y - lastY) < 1) return false;
-              lastAt = now; lastX = x; lastY = y; return true;
-            }
 
             function move(x, y) {
-              if (!dedup(x, y)) return;
               ih.handlePointerMove(x, y);
             }
 
             function end(x, y) {
               activeId = null;
-              // ⚠️ 用游戏原版 toWorldX/Y 的算法（都用宽度算 scale）
               var rect = ih.renderer.canvas.getBoundingClientRect();
               var scale = rect.width / 380 || 1;
               var n = (x - rect.left) / scale - 75;
               var i2 = (y - rect.top) / scale - 135;
               var g = e3.getState();
               if (!g || g.state !== 'playing' || g.paused) return;
-              var canceled = ih.skillController.pointerUp(n, i2);
-              var inB = n >= 0 && n <= 230 && i2 >= 0 && i2 <= 280;
-              if (!canceled && inB && performance.now() >= ih.dropLockUntil) {
-                ih.drop(ih.clampX(n));
-              }
+              if (ih.skillController.pointerUp(n, i2)) return;
+              if (n < 0 || n > 230 || i2 < 0 || i2 > 280) return;
+              if (performance.now() < ih.dropLockUntil) return;
+              ih.drop(ih.clampX(n));
             }
 
-            // 触摸：capture 阶段独吞
             target.addEventListener('touchstart', function (e) {
-              e.preventDefault(); e.stopImmediatePropagation();
+              if (e.cancelable) e.preventDefault();
               if (!e.touches.length) return;
               var t = e.touches[0];
               activeId = t.identifier;
               move(t.clientX, t.clientY);
-            }, true);
+            }, { passive: false });
 
             target.addEventListener('touchmove', function (e) {
-              e.preventDefault(); e.stopImmediatePropagation();
+              if (e.cancelable) e.preventDefault();
               if (activeId === null) return;
               for (var i = 0; i < e.touches.length; i++) {
-                var t = e.touches[i];
-                if (t.identifier === activeId) { move(t.clientX, t.clientY); return; }
+                if (e.touches[i].identifier === activeId) {
+                  move(e.touches[i].clientX, e.touches[i].clientY);
+                  return;
+                }
               }
-            }, true);
+            }, { passive: false });
 
             target.addEventListener('touchend', function (e) {
-              e.preventDefault(); e.stopImmediatePropagation();
+              if (e.cancelable) e.preventDefault();
               if (activeId === null) return;
               for (var i = 0; i < e.changedTouches.length; i++) {
                 var t = e.changedTouches[i];
                 if (t.identifier === activeId) { end(t.clientX, t.clientY); return; }
               }
-              if (e.changedTouches.length) {
-                end(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-              }
-            }, true);
+            }, { passive: false });
 
-            target.addEventListener('touchcancel', function (e) {
-              e.preventDefault(); e.stopImmediatePropagation();
+            target.addEventListener('touchcancel', function () {
               activeId = null;
-            }, true);
-
-            // 鼠标（PC）：capture 阶段
-            target.addEventListener('pointerdown', function (e) {
-              if (e.pointerType === 'touch') return;
-              move(e.clientX, e.clientY);
-            }, true);
-            target.addEventListener('pointermove', function (e) {
-              if (e.pointerType === 'touch') return;
-              if (e.pointerType === 'mouse' && e.buttons !== 1) return;
-              move(e.clientX, e.clientY);
-            }, true);
-            target.addEventListener('pointerup', function (e) {
-              if (e.pointerType === 'touch') return;
-              end(e.clientX, e.clientY);
-            }, true);
+            }, { passive: false });
           }
 
           var _ttIh = getIH();
