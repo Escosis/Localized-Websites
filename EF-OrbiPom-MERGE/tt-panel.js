@@ -170,6 +170,24 @@
             };
           }
         } catch (e) { console.warn('[TT-Panel] patch invincible failed', e); }
+        
+        /* ---------- 手机触摸：转发为 pointer ---------- */
+        (function () {
+          if (!window.PointerEvent) return;
+          var MAP = { touchstart: 'pointerdown', touchmove: 'pointermove', touchend: 'pointerup', touchcancel: 'pointerup' };
+          Object.keys(MAP).forEach(function (type) {
+            document.addEventListener(type, function (e) {
+              var t = e.changedTouches[0];
+              if (!t || !(e.target instanceof Element) || !e.target.closest('.cmi1Bf')) return;
+              e.preventDefault();
+              e.target.dispatchEvent(new PointerEvent(MAP[type], {
+                clientX: t.clientX, clientY: t.clientY,
+                bubbles: true, cancelable: true,
+                pointerId: 1, isPrimary: true
+              }));
+            }, { passive: false, capture: true });
+          });
+        })();
 
         /* ---------- 面板语言：初始由游戏语言决定，可手动改但不存储 ---------- */
         function resolvePanelLang() {
