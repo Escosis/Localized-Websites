@@ -155,8 +155,8 @@
             });
           }
         } catch (e) { console.warn('[TT-Panel] hook eq failed', e); }
-        
-                /* ---------- 竖屏旋转坐标修正 ---------- */
+
+        /* ---------- 竖屏旋转坐标修正 ---------- */
         try {
           setInterval(function () {
             var ih = getIH();
@@ -246,7 +246,7 @@
 
         /* ---------- URL 游戏语言 ---------- */
         var currentURLang = (function () {
-          try { return new URL(window.location.href).searchParams.get('lang') || ''; } catch (e) { return ''; }
+          try { return new URL(window.location.href).searchParams.get('lang') || 'zh-cn'; } catch (e) { return 'zh-cn'; }
         })();
 
         /* ---------- 排行榜 mock 同步 ---------- */
@@ -726,12 +726,12 @@
         btnEl = document.createElement('div');
         btnEl.innerText = t('openBtn');
         btnEl.style.cssText = 'position:fixed;top:0.325rem;right:0.325rem;z-index:100001;background:#ffb347;color:#fff;border-radius:0.325rem;padding:0.25rem 0.5rem;font-size:0.528rem;font-weight:bold;cursor:pointer;box-shadow:0 0.1625rem 0.4875rem rgba(0,0,0,.35);user-select:none;';
-        document.body.appendChild(btnEl);
+        document.documentElement.appendChild(btnEl);
 
         panelEl = document.createElement('div');
-        panelEl.style.cssText = 'display:none;position:fixed;top:1.87rem;right:0.325rem;z-index:100002;background:#fff;border-radius:0.4875rem;padding:0.56875rem;width:20.7em;max-height:80vh;overflow-y:auto;box-shadow:0 0.325rem 0.975rem rgba(0,0,0,.35);color:#333;font-size:0.65rem;';
+        panelEl.style.cssText = 'display:none;position:fixed;top:1.87rem;right:0.325rem;z-index:100002;background:#fff;border-radius:0.4875rem;padding:0.56875rem;width:20.7em;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain;box-shadow:0 0.325rem 0.975rem rgba(0,0,0,.35);color:#333;font-size:0.65rem;';
         panelEl.innerHTML = buildPanelHTML();
-        document.body.appendChild(panelEl);
+        document.documentElement.appendChild(panelEl);
         applyFontsToDom();
         bindPanelEvents();
 
