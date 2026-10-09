@@ -886,13 +886,21 @@
 			const WHITE_SVG = "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 10%22%3E%3Crect width=%22200%22 height=%2210%22 fill=%22white%22/%3E%3C/svg%3E";
 
 			function preloadPreview() {
-			    return Promise.all(PROJECTS.map(proj => new Promise(resolve => {
-			        if (!proj.preview) { proj._previewOk = false; return resolve(); }
-			        const img = new Image();
-			        img.onload  = () => { proj._previewOk = true;  resolve(); };
-			        img.onerror = () => { proj._previewOk = false; resolve(); };
-			        img.src = proj.preview;
-			    })));
+			    return Promise.all(PROJECTS.flatMap(proj => {
+			        const tasks = [];
+			        tasks.push(new Promise(resolve => {
+			            if (!proj.preview) { proj._previewOk = false; return resolve(); }
+			            const img = new Image();
+			            img.onload  = () => { proj._previewOk = true;  resolve(); };
+			            img.onerror = () => { proj._previewOk = false; resolve(); };
+			            img.src = proj.preview;
+			        }));
+			        if (proj.main) {
+			            const big = new Image();
+			            big.src = proj.main;
+			        }
+			        return tasks;
+			    }));
 			}
 
 			function renderList() {
@@ -933,15 +941,24 @@
 			        card.classList.toggle("active", i === index);
 			    });
 
-			    bgImageEl.style.transition = "none";
-			    bgImageEl.style.transform = "scale(2)";
-			    bgImageEl.src = proj.main;
-			    requestAnimationFrame(() => {
+			    const nextSrc = proj.main;
+			    const loader = new Image();
+			    loader.onload = () => {
+			        bgImageEl.style.transition = "none";
+			        bgImageEl.style.transform = "scale(2)";
+			        bgImageEl.src = nextSrc;
 			        requestAnimationFrame(() => {
-			            bgImageEl.style.transition = "transform 0.6s ease";
-			            bgImageEl.style.transform = "scale(1)";
+			            requestAnimationFrame(() => {
+			                bgImageEl.style.transition = "transform 0.6s ease";
+			                bgImageEl.style.transform = "scale(1)";
+			            });
 			        });
-			    });
+			    };
+			    loader.onerror = () => {
+			        bgImageEl.style.opacity = 0;
+			        bgImageEl.src = "";
+			    };
+			    loader.src = nextSrc;
 
 			    mainTitleEl.textContent = proj.label;
 			    enBoxEl.textContent = proj.en;
