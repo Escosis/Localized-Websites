@@ -1,0 +1,13 @@
+@font-face {
+  /* semi-bold */
+  font-family: Akrobat;
+  font-weight: 600;
+  src: url('./1ff3715322c5b7a25833dc4791c00cf0.otf');
+}
+
+@font-face {
+  /* bold */
+  font-family: Akrobat;
+  font-weight: 700;
+  src: url('./bdf75e7059b24a017f9093a1cbbc8898.otf');
+}

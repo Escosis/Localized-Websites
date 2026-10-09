@@ -1,350 +1,978 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>选择网页  Select Website</title>
-    <link rel="icon" href="icon.png">
-    <style>
-        /* ===== 全局重置 ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>
+			网页档案馆 Localized Websites
+		</title>
+		<link rel="icon" href=".assets/icon.png">
+		<style>
+			@font-face {
+			    font-family: 'HarmonyOS Sans';
+			    src: url('.assets/HarmonyOS_Sans_SC_Medium.woff2') format('woff2');
+			    font-weight: 400 700;
+			    font-style: normal;
+			    font-display: swap;
+			}
+			        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html {
-            height: 100%;
-            overflow: hidden;
-        }
+			        html, body {
+			            height: 100%;
+			            overflow: hidden;
+			            font-family: 'HarmonyOS Sans', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+			            background-color: #111;
+			            color: #fff;
+			            -webkit-user-select: none;
+			            user-select: none;
+			        }
 
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background-color: #222;
-            background-image: 
-                repeating-linear-gradient(0deg,
-                    rgba(54, 54, 54, 0.4) 0px,
-                    rgba(54, 54, 54, 0.4) 2px,
-                    transparent 2px,
-                    transparent 6px);
-            background-position: 0% 0%;
-            background-repeat: repeat;
-            background-size: auto;
-            color: #fff;
-            -webkit-user-select: none;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+			        :root { --cm: 3.096vw; }
 
-        /* ===== 主容器 ===== */
-        .container {
-            max-width: 640px;
-            width: 100%;
-            background: rgba(30, 30, 30, 0.85);
-            border-radius: 18px;
-            padding: 40px 36px 48px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(2px);
-        }
+			        .app-container {
+			            position: relative;
+			            width: 100vw;
+			            height: 100vh;
+			            overflow: hidden;
+			        }
 
-        /* ===== 头部 ===== */
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
+			.main-content {
+			    position: absolute;
+			    inset: 0;
+			    z-index: 1;
+			    overflow: hidden;
+			}
 
-        .header h1 {
-            font-size: 34px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 6px;
-            text-shadow: 0 2px 10px rgba(255, 241, 0, 0.1);
-        }
+			.main-content .bg-image {
+			    position: absolute;
+			    width: 100%;
+			    height: 100%;
+			    object-fit: cover;
+			    transform-origin: center;
+			    transform: scale(1);
+			    transition: transform 0.6s ease;
+			}
 
-        .header p {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.45);
-            letter-spacing: 3px;
-            font-weight: 300;
-        }
+			.main-content .overlay {
+			    position: absolute;
+			    inset: 0;
+			    z-index: 2;
+			    background: none;
+			    display: flex;
+			    flex-direction: column;
+			    justify-content: space-between;
+			    align-items: flex-end;
+			    padding: calc(2.5 * var(--cm)) calc(1.5 * var(--cm)) calc(1.1 * var(--cm)) 4vw;
+			}
 
-        .header .divider {
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #fff100, transparent);
-            margin: 14px auto 0;
-            border-radius: 2px;
-            box-shadow: 0 0 16px rgba(255, 241, 0, 0.15);
-        }
+			.text-area {
+			    text-align: right;
+			    max-width: 40vw;
+			}
 
-        /* ===== 项目列表 ===== */
-        .project-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+			.title-group {
+			    position: relative;
+			    display: block;
+			    width: fit-content;
+			    margin-left: auto;
+			    margin-bottom: 0.5vw;
+			}
 
-        /* ===== 项目卡片 ===== */
-        .project-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            cursor: pointer;
-            text-decoration: none;
-            color: #e0e0e0;
-            font-weight: 500;
-            font-size: 18px;
-            transition: all 0.25s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(2px);
-            min-height: 72px;
-        }
+			.title-group::after {
+			    content: '';
+			    position: absolute;
+			    right: calc(-0.3 * var(--cm));
+			    top: 0;
+			    bottom: 0;
+			    width: calc(0.08 * var(--cm));
+			    background: #fff;
+			    pointer-events: none;
+			}
 
-        .project-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 241, 0, 0.35);
-            transform: translateX(4px);
-            box-shadow: 0 8px 30px rgba(255, 241, 0, 0.06), 0 2px 10px rgba(0, 0, 0, 0.5);
-            color: #ffffff;
-        }
+			.text-area .main-title::before,
+			.text-area .desc::before,
+			.text-area .en-box::before,
+			.text-area .readme-box::before {
+			    content: '';
+			    position: absolute;
+			    inset: -0vw -0.25vw;
+			    background: rgba(0, 0, 0, 0.4);
+			    border-radius: 0.4vw;
+			    filter: blur(10px);
+			    z-index: -1;
+			}
 
-        .project-card:active {
-            transform: translateX(0px);
-            box-shadow: 0 2px 12px rgba(255, 241, 0, 0.05);
-        }
+			.text-area .main-title {
+			    position: relative;
+			    isolation: isolate;
+			    font-size: calc(0.8 * var(--cm));
+			    font-weight: 700;
+			    margin-bottom: 0.3vw;
+			    color: #ffffff;
+			    text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+			    text-align: right;
+			}
 
-        /* 左侧信息区（纵向排列） */
-        .project-card .info {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-width: 0;
-        }
+			.text-area .en-box {
+			    position: relative;
+			    isolation: isolate;
+			    font-size: calc(0.4 * var(--cm));
+			    line-height: 1.6;
+			    color: rgba(255, 255, 255, 0.9);
+			    display: block;
+			    text-align: right;
+			    margin-bottom: 0;
+			}
 
-        /* 项目名称 */
-        .project-card .info .label {
-            font-size: 18px;
-            font-weight: 500;
-            line-height: 1.3;
-        }
+			.text-area .desc {
+			    position: relative;
+			    font-size: calc(0.4 * var(--cm));
+			    line-height: 1.6;
+			    color: rgba(255, 255, 255, 0.9);
+			    background: none;
+			    backdrop-filter: none;
+			    text-align: right;
+			    display: inline-block;
+			    max-width: 100%;
+			    isolation: isolate;
+			    white-space: pre-line;
+			    word-break: keep-all;
+			    -webkit-user-select: text;
+			    user-select: text;
+			}
 
-        /* 小字描述 */
-        .project-card .info .desc {
-            font-size: 13px;
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.45);
-            margin-top: 2px;
-            line-height: 1.3;
-        }
+			.text-area .readme-box {
+			    position: relative;
+			    isolation: isolate;
+			    display: block;
+			    width: fit-content;
+			    margin-left: auto;
+			    font-size: calc(0.4 * var(--cm));
+			    line-height: 1.6;
+			    color: rgba(255, 255, 255, 0.9);
+			    text-decoration: none;
+			    padding: 0;
+			    cursor: pointer;
+			}
 
-        /* 游戏标签 */
-        .project-card .folder-tag {
-            display: inline-block;
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.06);
-            padding: 0 14px;
-            border-radius: 6px;
-            line-height: 28px;
-            letter-spacing: 0.5px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.25s ease;
-            font-family: 'Segoe UI', monospace;
-            flex-shrink: 0;
-            margin-left: 16px;
-        }
+			.text-area .readme-box .readme-inner {
+			    display: inline-flex;
+			    align-items: center;
+			    gap: 0.4vw;
+			}
 
-        .project-card:hover .folder-tag {
-            background: rgba(255, 241, 0, 0.12);
-            color: #fff100;
-            border-color: rgba(255, 241, 0, 0.2);
-            box-shadow: 0 0 16px rgba(255, 241, 0, 0.05);
-        }
+			.text-area .readme-box .q-mark {
+			    display: inline-flex;
+			    align-items: center;
+			    justify-content: center;
+			    width: calc(0.6 * var(--cm));
+			    height: calc(0.6 * var(--cm));
+			    border-radius: 50%;
+			    background: #484848;
+			    color: #A0A0A0;
+			    font-size: calc(0.45 * var(--cm));
+			    font-weight: 700;
+			    line-height: 1;
+			    flex-shrink: 0;
+			    border: 2px solid #868686;
+			    box-sizing: border-box;
+			    transform: translateY(1px);
+			}
 
-        /* 右箭头 */
-        .project-card .arrow {
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 20px;
-            margin-left: 12px;
-            transition: all 0.25s ease;
-            flex-shrink: 0;
-        }
+			.text-area .readme-box:hover .q-mark {
+			    background: #5e5e5e;
+			    color: #D1D1D1;
+			    border-color: #AFAFAF;
+			}
 
-        .project-card:hover .arrow {
-            color: rgba(255, 241, 0, 0.4);
-            transform: translateX(4px);
-        }
+			.text-area .readme-box .readme-label {
+			    white-space: nowrap;
+			}
 
-        /* ===== 响应式 ===== */
-        @media (max-width: 700px) {
-            .container {
-                padding: 32px 20px 40px;
-                border-radius: 10px;
-            }
-            .header h1 {
-                font-size: 26px;
-            }
-            .project-card {
-                font-size: 16px;
-                padding: 14px 18px;
-                min-height: 64px;
-            }
-            .project-card .info .label {
-                font-size: 16px;
-            }
-            .project-card .info .desc {
-                font-size: 12px;
-            }
-            .project-card .folder-tag {
-                font-size: 11px;
-                padding: 0 10px;
-                line-height: 24px;
-            }
-        }
+			.text-area .readme-box:hover .readme-label {
+			    color: #fff;
+			}
 
-        @media (max-width: 480px) {
-            .container {
-                padding: 24px 16px 32px;
-                border-radius: 8px;
-            }
-            .header h1 {
-                font-size: 22px;
-            }
-            .header p {
-                font-size: 13px;
-                letter-spacing: 1px;
-            }
-            .project-card {
-                font-size: 14px;
-                padding: 12px 14px;
-                min-height: 56px;
-                border-radius: 4px;
-            }
-            .project-card .info .label {
-                font-size: 14px;
-            }
-            .project-card .info .desc {
-                font-size: 11px;
-            }
-            .project-card .folder-tag {
-                font-size: 10px;
-                padding: 0 8px;
-                line-height: 20px;
-                margin-left: 10px;
-            }
-            .project-card .arrow {
-                font-size: 16px;
-                margin-left: 8px;
-            }
-        }
-    </style>
-</head>
-<body>
+			.enter-btn {
+			    display: flex;
+			    align-items: center;
+			    justify-content: center;
+			    width: calc(6.1 * var(--cm));
+			    height: calc(1.2 * var(--cm));
+			    --btn-bg: #EEECEC;
+			    background-color: var(--btn-bg);
+			    border: 0.1875rem solid var(--btn-bg);
+			    border-radius: 999rem;
+			    box-sizing: border-box;
+			    cursor: pointer;
+			    filter: drop-shadow(0 0.25rem 0.5rem rgba(0, 0, 0, 0.5));
+			    outline: none;
+			    padding: 0;
+			    transition: background-color 0.3s, border-color 0.3s;
+			    position: relative;
+			    text-decoration: none;
+			    flex-shrink: 0;
+			}
+			.enter-btn:hover { --btn-bg: #999898; }
 
-    <div class="container">
-        <div class="header">
-            <h1>📁 选择网页</h1>
-            <p>SELECT WEBSITE</p>
-            <div class="divider"></div>
-        </div>
+			.enter-btn:before {
+			    border-radius: 999rem;
+			    content: "";
+			    display: block;
+			    height: 100%;
+			    left: -0.75rem;
+			    padding: 0.75rem;
+			    position: absolute;
+			    top: -0.75rem;
+			    width: 100%;
+			}
 
-        <div class="project-list" id="projectList"></div>
-    </div>
+			.enter-btn .geSYZP {
+			    position: relative;
+			    display: block;
+			    padding: 0;
+			    align-items: center;
+			    background-image: url(.assets/primary_btn_texture.png);
+			    background-position: 100%;
+			    background-repeat: no-repeat;
+			    background-size: auto 100%;
+			    border: 0.125rem solid #42424280;
+			    border-radius: 999rem;
+			    height: 100%;
+			    width: 100%;
+			    box-sizing: border-box;
+			}
 
-    <script>
-        // ============================================================
-        //  项目列表
-        // ============================================================
-        const PROJECTS = [
-            { 
-                label: "协议重连  Protocol Reconnection", 
-                game: "明日方舟：终末地", 
-                folder: "EF-Protocol-Reconnection", 
-                entry: "index.html",
-                desc: "终末地回归任务" 
-            },
-            { 
-                label: "共贺庆典  Party Together", 
-                game: "明日方舟", 
-                folder: "AK-Party-Together", 
-                entry: "index.html",
-                desc: "方舟七周年网页小游戏，内置修改面板" 
-            },
-            { 
-                label: "未知聊天室  Chat Room Unknown", 
-                game: "崩坏三", 
-                folder: "BH3-chatroomunknown", 
-                entry: "index.html",
-                desc: "崩三第一部第29章「来自乐土」最开始剧情中的网页 (https://www.bh3.com/chatroomunknown/)" 
-            },
-            { 
-                label: "视觉小说集  Visual Novel Collection", 
-                game: "崩坏三", 
-                folder: "BH3-Visual-Novels", 
-                entry: "index.html",
-                desc: "崩三三部视觉小说合集" 
-            },
-            //{ 
-                //label: "星之终途  Stella of the End", 
-                //game: "終のステラ", 
-                //folder: "Stella-of-the-End", 
-                //entry: "index.html",
-                //desc: "自己部署的星之终途网页版，国内加载需要一定时间，目前存在 BUG 无法正常运行" 
-            //},
-            { 
-                label: "巨魔网页版  TrollStore For The Web", 
-                game: "TrollStore", 
-                folder: "TrollStore-For-The-Web", 
-                entry: "index.html",
-                desc: "修改自 https://github.com/sunstar16/TrollStore-For-The-Web/ 的网页版高仿巨魔商店，添加了更多仿制细节" 
-            },
-            { 
-                label: "融合！山团团！  OrbiPom! MERGE!", 
-                game: "明日方舟：终末地", 
-                folder: "EF-OrbiPom-MERGE", 
-                entry: "orbipom-merge.html",
-                desc: "终末地网页小游戏，内置修改面板" 
-            },
-        ];
+			.enter-btn .qeBMS7 {
+			    position: absolute;
+			    left: calc(0.9 * var(--cm));
+			    top: 50%;
+			    transform: translateY(-50%);
+			    width: calc(2.3 * var(--cm));
+			    height: 1px;
+			    margin-right: 0;
+			    min-width: 0;
+			    flex: none;
+			    opacity: 0.5;
+			    background-color: #444;
+			    transition: background-color 0.3s;
+			}
 
-        // ============================================================
-        //  渲染项目卡片
-        // ============================================================
-        const list = document.getElementById("projectList");
+			.enter-btn .qeBMS7:before,
+			.enter-btn .qeBMS7:after {
+			    background-color: #444;
+			    border-radius: 50%;
+			    content: "";
+			    display: block;
+			    height: 5px;
+			    position: absolute;
+			    top: -2px;
+			    width: 5px;
+			    transition: background-color 0.3s;
+			}
+			.enter-btn .qeBMS7:before { left: 0; }
+			.enter-btn .qeBMS7:after { right: 0; }
 
-        for (const proj of PROJECTS) {
-            const card = document.createElement("a");
-            card.className = "project-card";
-            card.href = `./${proj.folder}/${proj.entry}`;
-            card.innerHTML = `
-                <div class="info">
-                    <span class="label">${proj.label}</span>
-                    <span class="desc">${proj.desc}</span>
-                </div>
-                <span class="folder-tag">${proj.game}</span>
-                <span class="arrow">›</span>
-            `;
-            list.appendChild(card);
-        }
-    </script>
+			.enter-btn .rHn5rm {
+			    position: absolute;
+			    left: calc(3.8 * var(--cm));
+			    top: 50%;
+			    transform: translateY(-50%);
+			    font-size: calc(0.45 * var(--cm));
+			    color: #444;
+			    white-space: nowrap;
+			    transition: color 0.3s;
+			}
 
-</body>
+			.enter-btn .circle {
+			    position: absolute;
+			    left: calc(5 * var(--cm));
+			    top: 50%;
+			    transform: translateY(-50%);
+			    width: calc(0.6 * var(--cm));
+			    height: calc(0.6 * var(--cm));
+			    border-radius: 50%;
+			    background-color: #444;
+			    overflow: hidden;
+			    transition: background-color 0.3s;
+			}
+
+			.enter-btn .ring {
+			    position: absolute;
+			    left: 50%;
+			    top: 50%;
+			    transform: translate(-50%, -50%);
+			    width: calc(0.25 * var(--cm));
+			    height: calc(0.25 * var(--cm));
+			    border: calc(0.07 * var(--cm)) solid var(--btn-bg);
+			    border-radius: 50%;
+			    box-sizing: content-box;
+			    transition: border-color 0.3s;
+			}
+
+			.enter-btn .gap {
+			    position: absolute;
+			    left: 50%;
+			    top: 50%;
+			    width: calc(0.08 * var(--cm));
+			    height: calc(0.6 * var(--cm));
+			    background-color: #444;
+			    transform: translate(-50%, -50%) rotate(-45deg);
+			    transition: background-color 0.3s;
+			}
+
+			.enter-btn:hover .qeBMS7 { background-color: #fff; opacity: 1; }
+			.enter-btn:hover .qeBMS7:before,
+			.enter-btn:hover .qeBMS7:after { background-color: #fff; }
+			.enter-btn:hover .rHn5rm { color: #fff; }
+			.enter-btn:hover .circle,
+			.enter-btn:hover .gap { background-color: #fff; }
+
+			.enter-btn.disabled {
+			    opacity: 0.5;
+			    pointer-events: none;
+			}
+
+			@keyframes slideInFromRight {
+			    from { transform: translateX(3vw); opacity: 0; }
+			    to { transform: translateX(0); opacity: 1; }
+			}
+			.text-area.slide-in,
+			.enter-btn.slide-in {
+			    animation: slideInFromRight 0.5s ease forwards;
+			}
+
+			.sidebar {
+			    position: absolute;
+			    left: 0; top: 0; bottom: 0;
+			    width: 35vw;
+			    display: flex;
+			    flex-direction: column;
+			    justify-content: center;
+			    z-index: 10;
+			    pointer-events: none;
+
+			    --line-top: 8vh;
+			    --line-gap: 1vh;
+			}
+
+			.sidebar::before {
+			    content: '';
+			    position: absolute;
+			    inset: 0;
+			    background: linear-gradient(to right, 
+			        rgba(14, 14, 14, 0.8) 0%, 
+			        rgba(14, 14, 14, 0.8) 30%, 
+			        rgba(14, 14, 14, 0) 100%);
+			    z-index: -1;
+			    pointer-events: none;
+			}
+
+			.line-anchor {
+			    position: absolute;
+			    left: 0;
+			    top: var(--line-top);
+			    bottom: 0;
+			    width: 100%;
+			    pointer-events: none;
+			}
+
+			.sidebar-deco {
+			    position: absolute;
+			    left: calc(1.03 * var(--cm));
+			    bottom: 100%;
+			    display: flex;
+			    flex-direction: column;
+			    align-items: flex-start;
+			    z-index: 6;
+			    pointer-events: none;
+			}
+
+			.deco-label {
+			    font-size: calc(0.4 * var(--cm));
+			    font-weight: 600;
+			    color: #d8d8d8;
+			    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+			    white-space: nowrap;
+			    line-height: 1;
+			    margin-bottom: calc(0.4 * var(--cm));
+			}
+
+			.deco-triangle {
+			    display: block;
+			    width: calc(0.2 * var(--cm));
+			    height: calc(0.2 * var(--cm));
+			    color: #d8d8d8;
+			    flex-shrink: 0;
+			}
+
+			.white-line {
+			    position: absolute;
+			    left: calc(1.12 * var(--cm));
+			    top: var(--line-gap);
+			    bottom: 0;
+			    width: calc(0.02 * var(--cm));
+			    background: rgba(90, 90, 90, 0.7);
+			    z-index: 5;
+			    pointer-events: none;
+			}
+
+			.white-line::before {
+			    content: '';
+			    position: absolute;
+			    right: calc(100% + 0.25 * var(--cm));
+			    top: 0;
+			    bottom: 0;
+			    width: calc(0.1 * var(--cm));
+			    background-image: repeating-linear-gradient(
+			        to bottom,
+			        rgba(90, 90, 90, 0.7) 0,
+			        rgba(90, 90, 90, 0.7) calc(0.02 * var(--cm)),
+			        transparent calc(0.02 * var(--cm)),
+			        transparent calc(0.75 * var(--cm))
+			    );
+			    background-size: 100% calc(0.75 * var(--cm));
+			    background-repeat: repeat-y;
+			    animation: lineScroll 11.25s linear infinite;
+			    pointer-events: none;
+			}
+
+			@keyframes lineScroll {
+			    from { background-position: 0 0; }
+			    to   { background-position: 0 calc(0.75 * var(--cm)); }
+			}
+
+			.project-list {
+			    display: flex;
+			    flex-direction: column;
+			    gap: calc(0.35 * var(--cm));
+			    padding-top: 12vh;
+			    padding-bottom: 12vh;
+			    padding-left: 0;
+			    max-height: 100vh;
+			    overflow-y: auto;
+			    pointer-events: auto;
+			    -ms-overflow-style: none;
+			    scrollbar-width: none;
+			    position: relative;
+			}
+			.project-list::-webkit-scrollbar { display: none; }
+
+			.project-card {
+			    position: relative;
+			    width: calc(4.73 * var(--cm));
+			    height: calc(1.4 * var(--cm));
+			    margin-left: calc(1.2 * var(--cm));
+			    border-radius: 0 calc(0.1 * var(--cm)) calc(0.1 * var(--cm)) 0;
+			    cursor: pointer;
+			    transition: background-color 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+			    overflow: visible;
+			    display: flex;
+			    align-items: center;
+			    box-shadow: calc(0.08 * var(--cm)) calc(0.08 * var(--cm)) calc(0.2 * var(--cm)) rgba(0, 0, 0, 0.6);
+			    flex-shrink: 0;
+			    z-index: 10;
+			    background: #181818;
+			}
+
+			.project-card .slide-rect {
+			    position: absolute;
+			    right: 0;
+			    top: 0;
+			    width: calc(100% + 1 * var(--cm));
+			    height: 100%;
+			    background: var(--trail-color, #fff100);
+			    border-radius: 0 calc(0.1 * var(--cm)) calc(0.1 * var(--cm)) 0;
+			    transform: translateX(-100%);
+			    opacity: 0;
+			    z-index: 0;
+			    pointer-events: none;
+			}
+
+			.card-bg {
+			    position: absolute;
+			    inset: 0;
+			    border-radius: inherit;
+			    overflow: hidden;
+			    z-index: 1;
+			    background: #181818;
+			}
+
+			.card-bg img {
+			    position: absolute;
+			    right: 0;
+			    top: 0;
+			    height: 100%;
+			    width: auto;
+			    max-width: none;
+			    z-index: 1;
+			}
+
+			.card-bg .gradient {
+			    position: absolute; inset: 0;
+			    background: linear-gradient(to right, 
+			        rgba(43, 43, 43, 1) 0%, 
+			        rgba(43, 43, 43, 1) 25%, 
+			        rgba(43, 43, 43, 0.6) 60%, 
+			        transparent 100%);
+			    z-index: 2;
+			    transition: background 0.35s ease;
+			}
+
+			.project-card .info {
+			    position: relative; z-index: 3;
+			    display: flex; flex-direction: column; justify-content: center;
+			    padding-left: 1.2vw; width: 100%; height: 100%;
+			}
+
+			.project-card .info .label {
+			    position: relative;
+			    font-size: calc(0.4 * var(--cm)); font-weight: 600; color: #d8d8d8;
+			    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+			    transition: color 0.35s ease, font-size 0.35s ease;
+			    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+			}
+
+			.project-card.active .info .label {
+			    padding-left: 0.9em;
+			}
+
+			.project-card.active .info .label::before {
+			    content: '▶';
+			    position: absolute;
+			    left: 0;
+			    top: 50%;
+			    transform: translateY(-50%);
+			    font-size: calc(0.2 * var(--cm));
+			    color: #222;
+			    transition: color 0.35s ease;
+			    line-height: 1;
+			}
+
+			.project-card .info .game-tag {
+			    font-size: 0.7vw; color: rgba(255, 255, 255, 0.6);
+			    margin-top: 0.2vw;
+			    background: rgba(255, 255, 255, 0.1);
+			    padding: 0.1vw 0.4vw; border-radius: 0.2vw;
+			    align-self: flex-start;
+			    transition: all 0.35s ease;
+			}
+
+			.project-card .trail {
+			    position: absolute; right: 100%; top: 0; height: 100%;
+			    width: calc(1.0 * var(--cm));
+			    opacity: 0; transition: opacity 0.35s ease;
+			    pointer-events: none; z-index: 0;
+			    background-color: var(--trail-color, #fff100);
+			    background-image: repeating-linear-gradient(
+			        135deg,
+			        rgba(150, 150, 150, 0.2) 0,
+			        rgba(150, 150, 150, 0.2) calc(0.0221 * var(--cm)),
+			        transparent calc(0.0221 * var(--cm)),
+			        transparent calc(0.0884 * var(--cm))
+			    );
+			}
+
+			.project-card:not(.active)::before {
+			    content: '';
+			    position: absolute;
+			    left: calc(-0.08 * var(--cm));
+			    top: 50%;
+			    transform: translate(-50%, -50%);
+			    width: calc(0.25 * var(--cm));
+			    height: calc(0.03 * var(--cm));
+			    border: calc(0.03 * var(--cm)) solid rgba(255, 255, 255, 0.9);
+			    background: #3a3a3a; z-index: 30;
+			    pointer-events: none;
+			    box-shadow: 0 0 2px rgba(255,255,255,0.3);
+			}
+
+			.project-card.active {
+			    width: calc(5.32 * var(--cm));
+			    height: calc(1.8 * var(--cm));
+			    margin-left: calc(1.0 * var(--cm));
+			    box-shadow: 
+			        calc(0.12 * var(--cm)) calc(0.12 * var(--cm)) calc(0.3 * var(--cm)) rgba(0, 0, 0, 0.8),
+			        calc(-0.2 * var(--cm)) 0 calc(0.35 * var(--cm)) rgba(0, 0, 0, 0.75),
+			        calc(-0.05 * var(--cm)) 0 calc(0.1 * var(--cm)) rgba(0, 0, 0, 0.9);
+			    z-index: 10;
+			}
+
+			.project-card.active .card-bg .gradient {
+			    background: linear-gradient(to right, 
+			        rgba(255, 255, 255, 1) 0%, 
+			        rgba(255, 255, 255, 1) 30%, 
+			        rgba(255, 255, 255, 0) 80%, 
+			        transparent 100%);
+			    z-index: 2;
+			    transition: background 0.35s ease;
+			}
+
+			.project-card.active .card-bg .gradient::after {
+			    content: '';
+			    position: absolute;
+			    inset: 0;
+			    background-image: radial-gradient(circle,
+			        rgba(0, 0, 0, 0.1) 0.5px,
+			        transparent 0.5px);
+			    background-size: calc(0.25 * var(--cm)) calc(0.25 * var(--cm));
+			    background-position: 0 0;
+			    -webkit-mask-image: linear-gradient(to right,
+			        #000 0%,
+			        #000 30%,
+			        transparent 80%);
+			    mask-image: linear-gradient(to right,
+			        #000 0%,
+			        #000 30%,
+			        transparent 80%);
+			    pointer-events: none;
+			}
+
+			.project-card.active .info .label {
+			    color: #222; font-size: calc(0.45 * var(--cm)); text-shadow: none;
+			}
+
+			.project-card.active .info .game-tag {
+			    color: rgba(0, 0, 0, 0.6); background: rgba(0, 0, 0, 0.08);
+			}
+
+			.project-card.active .trail { opacity: 1; }
+
+			.project-card.active .trail::after {
+			    content: '';
+			    position: absolute;
+			    right: 0;
+			    top: 0;
+			    bottom: 0;
+			    width: calc(0.2 * var(--cm));
+			    background: linear-gradient(to left,
+			        rgba(0, 0, 0, 0.3) 0%,
+			        rgba(0, 0, 0, 0) 100%);
+			    pointer-events: none;
+			}
+
+			.project-card .bracket {
+			    position: absolute;
+			    left: calc(100% + 0.18 * var(--cm));
+			    top: 50%; transform: translateY(-50%);
+			    width: calc(0.1 * var(--cm));
+			    height: 0;
+			    border-right: calc(0.05 * var(--cm)) solid var(--trail-color, #fff100);
+			    border-top: calc(0.05 * var(--cm)) solid var(--trail-color, #fff100);
+			    border-bottom: calc(0.05 * var(--cm)) solid var(--trail-color, #fff100);
+			    border-left: none; box-sizing: border-box;
+			    opacity: 0;
+			    transition: height 0.2s ease, opacity 0.2s ease;
+			    pointer-events: none; z-index: 10;
+			}
+
+			.project-card.active.no-img .slide-rect {
+			    background: linear-gradient(
+			        to left,
+			        #fff 0,
+			        #fff calc(100% - 1 * var(--cm)),
+			        var(--trail-color, #fff100) calc(100% - 1 * var(--cm)),
+			        var(--trail-color, #fff100) 100%
+			    );
+			}
+
+			.project-card.active .bracket { height: 100%; opacity: 1; }
+
+			.project-card.no-img .card-bg { background: transparent; }
+			.project-card.no-img .gradient { display: none; }
+			.project-card.active.no-img { background: #fff; }
+			.project-card.no-img .card-bg img { display: none; }
+
+			@keyframes slideInRect {
+			    from { transform: translateX(-100%); opacity: 0; }
+			    to   { transform: translateX(0);     opacity: 1; }
+			}
+			@keyframes fadeInContent {
+			    from { opacity: 0; }
+			    to   { opacity: 1; }
+			}
+			@keyframes extendBracket {
+			    from { height: 0;    opacity: 0; }
+			    to   { height: 100%; opacity: 1; }
+			}
+
+			.project-card.entering {
+			    background: transparent;
+			    box-shadow: none;
+			}
+			.project-card.entering .slide-rect {
+			    animation: slideInRect 0.25s ease-out 0s both;
+			}
+			.project-card.entering .bracket {
+			    animation: extendBracket 0.2s ease-out 0.25s both;
+			}
+			.project-card.entering .card-bg,
+			.project-card.entering .info,
+			.project-card.entering .trail {
+			    animation: fadeInContent 0.2s ease-out 0.25s both;
+			}
+			.project-card.active.entering {
+			    background: transparent;
+			    box-shadow: none;
+			    transition: none;
+			}
+		</style>
+		<link rel="stylesheet" href="readme-modal.css">
+	</head>
+	<body>
+		<div class="app-container">
+			<main class="main-content">
+				<img class="bg-image" id="bgImage" src="" alt="背景图">
+				<div class="overlay">
+					<div class="text-area">
+						<a class="readme-box" id="readmeBox" href="javascript:void(0);" role="button">
+							<span class="readme-inner">
+								<span class="q-mark">
+									?
+								</span>
+								<span class="readme-label">
+									下载与部署说明
+								</span>
+							</span>
+						</a>
+						<div class="title-group">
+							<div class="main-title" id="mainTitle">
+							</div>
+							<div class="en-box" id="enBox">
+							</div>
+						</div>
+						<div class="desc" id="mainDesc">
+						</div>
+					</div>
+					<a class="enter-btn" id="enterBtn" href="#">
+						<div class="geSYZP">
+							<div class="qeBMS7">
+							</div>
+							<div class="rHn5rm">
+								前往
+							</div>
+							<div class="circle">
+								<div class="ring">
+								</div>
+								<div class="gap">
+								</div>
+							</div>
+						</div>
+					</a>
+				</div>
+			</main>
+			<aside class="sidebar">
+				<div class="line-anchor">
+					<div class="sidebar-deco">
+						<div class="deco-label">
+							// 网页档案馆
+						</div>
+						<svg class="deco-triangle" viewBox="0 0 10 10">
+							<polygon points="5,1 1,9 9,9" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="miter" />
+						</svg>
+					</div>
+					<div class="white-line">
+					</div>
+				</div>
+				<div class="project-list" id="projectList">
+				</div>
+			</aside>
+		</div>
+
+		<div class="modal-layer" id="modalLayer" style="display: none;">
+			<div class="modal-mask" id="modalMask">
+			</div>
+			<div class="modal-content">
+				<div class="modal-root">
+					<div class="modal-header">
+						<div class="modal-title">
+							下载与部署说明
+						</div>
+						<div class="modal-close" id="modalCloseBtn">
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="scroll-wrapper">
+							<div class="scroll-container" id="scrollContainer">
+								<article class="markdown-body" id="modalContent">
+								</article>
+							</div>
+							<div class="custom-scrollbar">
+								<div class="custom-scrollbar-thumb" id="scrollThumb">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			const PROJECTS = [
+			    {
+			        label: "融合！山团团！", en: "OrbiPom! Merge!",
+			        game: "明日方舟：终末地",
+			        color: "#ebdc73",
+			        desc: "终末地网页小游戏，支持多语言，内置修改面板。\n来吧，让我们一起看看山团团贴贴蹭蹭后能有什么样的惊喜……",
+			        preview: ".assets/ef-om-pv.png", main: ".assets/ef-om-bg.png",
+			        link: "./EF-OrbiPom-MERGE/orbipom-merge.html"
+			    },
+			    {
+			        label: "协议重连", en: "Protocol Reconnection",
+			        game: "明日方舟：终末地",
+			        color: "#ebdc73",
+			        desc: "终末地回归任务（如今已内置，原网页已绝版）。\n欢迎回归塔卫二，管理员。",
+			        preview: ".assets/ef-pr-pv.jpg", main: ".assets/ef-pr-bg.jpg",
+			        link: "./EF-Protocol-Reconnection/index.html"
+			    },
+			    {
+			        label: "循着寒风的箭矢", en: "Arrow on the Cold Wind",
+			        game: "明日方舟：终末地",
+			        color: "#ebdc73",
+			        desc: "森空岛上的终末地网页小游戏，部分支持多语言，内置修改面板。\n在寒雾弥漫的雪境深林中，巫术造物们不会放过外来者。游荡着的树傀带着愤怒涌来，但提弗洛斯的弓与箭矢可不允许它们放肆。聆听寒风的行迹吧，管理员。为提弗洛斯的箭矢选好方向，让它在风中穿行起舞……然后，再为雪林带来长久的平静。",
+			        preview: ".assets/ef-acw-pv.png", main: ".assets/ef-acw-bg.png",
+			        link: "./EF-Arrow-on-the-Cold-Wind/frostwind-arrow.html"
+			    },
+			    {
+			        label: "共贺庆典", en: "Party Together",
+			        game: "明日方舟 & 明日方舟：终末地",
+			        color: "#068ec0",
+			        desc: "明日方舟七周年联动网页小游戏，支持多语言，内置修改面板。",
+			        preview: ".assets/ak-pt-pr.png", main: ".assets/ak-pt-bg.png",
+			        link: "./AK-Party-Together/index.html"
+			    },
+			    {
+			        label: "未知聊天室", en: "Chat Room Unknown",
+			        game: "崩坏三",
+			        color: "#aaaaaa",
+			        desc: "崩坏三第一部第29章「来自乐土」最开始剧情中的网页（https://www.bh3.com/chatroomunknown/）。",
+			        preview: ".assets/bh3-cru-pr.jpg", main: ".assets/bh3-cru-bg.png",
+			        link: "./BH3-chatroomunknown/index.html"
+			    },
+			    {
+			        label: "视觉小说集", en: "Visual Novel Collection",
+			        game: "崩坏三",
+			        color: "#fb9a29",
+			        desc: "崩坏三三部视觉小说合集。为世界上所有的美好而战！",
+			        preview: ".assets/bh3-vnc-pr.png", main: ".assets/bh3-vnc-bg.jpg",
+			        link: "./BH3-Visual-Novels/index.html"
+			    },
+			    //{ 
+			        //label: "星之终途  Stella of the End", 
+			        //game: "終のステラ", 
+					//color: "#aaaaaa",
+			        //desc: "星之终途网页版，国内加载需要一定时间，目前存在 BUG 无法正常运行",
+			        //preview: ".assets/sote-pv.png", main: ".assets/sote-bg.png", 
+			        //entry: "./Stella-of-the-End/index.html",
+
+			    //},
+			    {
+			        label: "巨魔网页版", en: "TrollStore For The Web",
+			        game: "TrollStore",
+			        color: "#ff6e6e",
+			        desc: "修改自 https://github.com/sunstar16/TrollStore-For-The-Web/的网页版高仿巨魔商店，相比原项目添加了更多仿制细节。",
+			        preview: ".assets/tsw-pr.jpg", main: ".assets/tsw-bg.png",
+			        link: "./TrollStore-For-The-Web/index.html"
+			    }
+			];
+
+			const listEl = document.getElementById("projectList");
+			const bgImageEl = document.getElementById("bgImage");
+			const mainTitleEl = document.getElementById("mainTitle");
+			const enBoxEl = document.getElementById("enBox");
+			const mainDescEl = document.getElementById("mainDesc");
+			const enterBtnEl = document.getElementById("enterBtn");
+			let currentIndex = -1;
+
+			const WHITE_SVG = "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 10%22%3E%3Crect width=%22200%22 height=%2210%22 fill=%22white%22/%3E%3C/svg%3E";
+
+			function preloadPreview() {
+			    return Promise.all(PROJECTS.map(proj => new Promise(resolve => {
+			        if (!proj.preview) { proj._previewOk = false; return resolve(); }
+			        const img = new Image();
+			        img.onload  = () => { proj._previewOk = true;  resolve(); };
+			        img.onerror = () => { proj._previewOk = false; resolve(); };
+			        img.src = proj.preview;
+			    })));
+			}
+
+			function renderList() {
+			    listEl.innerHTML = "";
+			    PROJECTS.forEach((proj, index) => {
+			        const card = document.createElement("div");
+			        card.className = `project-card ${index === currentIndex ? 'active' : ''}`;
+			        card.style.setProperty('--trail-color', proj.color || '#fff100');
+
+			        if (!proj._previewOk) card.classList.add("no-img");
+			        const previewSrc = proj._previewOk ? proj.preview : WHITE_SVG;
+
+			        card.innerHTML = `
+			<div class="slide-rect"></div>
+			<div class="card-bg">
+			    <img src="${previewSrc}" alt="">
+			    <div class="gradient"></div>
+			</div>
+			<div class="info">
+			    <span class="label">${proj.label}</span>
+			    <span class="game-tag">${proj.game}</span>
+			</div>
+			<div class="trail"></div>
+			<div class="bracket"></div>
+			        `;
+			        card.addEventListener("click", () => selectProject(index));
+			        listEl.appendChild(card);
+			    });
+			}
+
+			function selectProject(index) {
+			    if (index === currentIndex) return;
+			    currentIndex = index;
+			    const proj = PROJECTS[index];
+
+			    const cards = listEl.querySelectorAll(".project-card");
+			    cards.forEach((card, i) => {
+			        card.classList.toggle("active", i === index);
+			    });
+
+			    bgImageEl.style.transition = "none";
+			    bgImageEl.style.transform = "scale(2)";
+			    bgImageEl.src = proj.main;
+			    requestAnimationFrame(() => {
+			        requestAnimationFrame(() => {
+			            bgImageEl.style.transition = "transform 0.6s ease";
+			            bgImageEl.style.transform = "scale(1)";
+			        });
+			    });
+
+			    mainTitleEl.textContent = proj.label;
+			    enBoxEl.textContent = proj.en;
+			    mainDescEl.textContent = proj.desc;
+			    enterBtnEl.href = proj.link;
+			    enterBtnEl.classList.toggle("disabled", proj.link === "#");
+
+			    const textAreaEl = document.querySelector(".text-area");
+			    [textAreaEl, enterBtnEl].forEach(el => {
+			        el.classList.remove("slide-in");
+			        void el.offsetWidth;
+			        el.classList.add("slide-in");
+			    });
+
+			    cards.forEach(card => {
+			        card.classList.remove("entering");
+			        void card.offsetWidth;
+			    });
+			    const activeCard = cards[index];
+			    activeCard.classList.add("entering");
+			    setTimeout(() => {
+			        activeCard.classList.remove("entering");
+			    }, 800);
+			}
+
+			preloadPreview().then(() => {
+			    renderList();
+			    selectProject(0);
+			});
+		</script>
+		<script src="readme-modal.js">
+		</script>
+	</body>
 </html>

@@ -1,0 +1,269 @@
+/* ===== 下载与部署说明弹窗 ===== */
+/* 所有尺寸以 --u 为基准：1u = 16px @ 设计稿 1920 宽 */
+
+.modal-layer {
+    --u: calc(100vw / 120);
+
+    position: fixed;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    pointer-events: none;
+    font-family: 'HarmonyOS Sans', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: calc(1 * var(--u));
+    color: #444;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.modal-mask {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.modal-content {
+    position: relative;
+    opacity: 0;
+    transform: scale(0.88);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.modal-layer.enter .modal-mask { opacity: 0; transition: opacity 0.3s; }
+.modal-layer.enter-active,
+.modal-layer.enter-done { pointer-events: auto; }
+.modal-layer.enter-active .modal-mask,
+.modal-layer.enter-done .modal-mask { opacity: 1; }
+.modal-layer.enter-active .modal-content,
+.modal-layer.enter-done .modal-content { opacity: 1; transform: scale(1); }
+.modal-layer.exit .modal-mask { opacity: 1; transition: opacity 0.3s; }
+.modal-layer.exit-active .modal-mask { opacity: 0; }
+.modal-layer.exit .modal-content { opacity: 1; transform: scale(1); transition: opacity 0.3s, transform 0.3s; }
+.modal-layer.exit-active .modal-content { opacity: 0; transform: scale(0.88); }
+.modal-layer.exit-done { display: none; }
+
+.modal-root {
+    background-color: #eee;
+    border-radius: calc(0.625 * var(--u));
+    width: calc(113.75 * var(--u));
+    max-width: 96vw;
+}
+
+.modal-header {
+    align-items: center;
+    background-color: #222;
+    background-image: url(.assets/deco_points.png);
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-size: auto calc(2 * var(--u));
+    border-radius: calc(0.5 * var(--u)) calc(0.5 * var(--u)) 0 0;
+    display: flex;
+    font-size: calc(2.25 * var(--u));
+    height: calc(8.125 * var(--u));
+    justify-content: center;
+    position: relative;
+}
+
+.modal-title {
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.modal-close {
+    background-image: url(.assets/close.svg);
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: calc(2.5 * var(--u)) auto;
+    cursor: pointer;
+    height: calc(4 * var(--u));
+    position: absolute;
+    right: calc(1 * var(--u));
+    top: 50%;
+    transform: translateY(-50%);
+    transition: opacity 0.2s;
+    width: calc(4 * var(--u));
+}
+.modal-close:hover { opacity: 0.5; }
+
+.modal-body {
+    background-image: url(.assets/deco_1.png);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: auto calc(22.125 * var(--u));
+    box-sizing: border-box;
+    color: #444;
+    font-size: calc(1.625 * var(--u));
+    height: min(calc(48 * var(--u)), 95vh);
+    padding: calc(1 * var(--u)) calc(2 * var(--u));
+    position: relative;
+}
+
+.scroll-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.scroll-container {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: calc(0.75 * var(--u));
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.scroll-container::-webkit-scrollbar { display: none; }
+
+.custom-scrollbar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: calc(0.25 * var(--u));
+    background-color: rgba(68, 68, 68, 0.2);
+    border-radius: calc(0.1875 * var(--u));
+    overflow: visible;
+    pointer-events: none;
+}
+
+.custom-scrollbar-thumb {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(0.25 * var(--u));
+    background-color: rgba(238, 238, 238, 0.8);
+    border-radius: calc(0.1875 * var(--u));
+    box-shadow: 0 0 calc(0.5 * var(--u)) rgba(0, 0, 0, 0.4);
+    pointer-events: auto;
+    cursor: pointer;
+    height: 0;
+}
+
+/* ===== 弹窗内 markdown 排版 ===== */
+.modal-layer .markdown-body {
+    margin: 0 calc(10 * var(--u));
+    padding: calc(1 * var(--u)) 0;
+    white-space: normal;
+    font-size: calc(1.625 * var(--u));
+    line-height: 1.5;
+    color: #444;
+    word-break: break-word;
+}
+
+.modal-layer .markdown-body h1,
+.modal-layer .markdown-body h2,
+.modal-layer .markdown-body h3,
+.modal-layer .markdown-body h4,
+.modal-layer .markdown-body h5,
+.modal-layer .markdown-body h6 {
+    color: #222;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 1em 0 0.4em;
+    white-space: normal;
+}
+.modal-layer .markdown-body h1 { font-size: 1.4em; border-bottom: 1px solid rgba(0,0,0,0.12); padding-bottom: 0.2em; }
+.modal-layer .markdown-body h2 { font-size: 1.25em; }
+.modal-layer .markdown-body h3 { font-size: 1.1em; }
+.modal-layer .markdown-body h4 { font-size: 1em; }
+
+.modal-layer .markdown-body p { margin: 0.6em 0; }
+.modal-layer .markdown-body ul,
+.modal-layer .markdown-body ol { margin: 0.6em 0; padding-left: 1.5em; }
+.modal-layer .markdown-body li { margin: 0.25em 0; }
+
+.modal-layer .markdown-body a {
+    color: #b8860b;
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(184, 134, 11, 0.5);
+    cursor: pointer;
+    transition: color 0.15s ease, border-bottom-color 0.15s ease;
+}
+.modal-layer .markdown-body a:hover {
+    color: #e0a91a;
+    border-bottom: 1px solid #e0a91a;
+}
+
+.modal-layer .markdown-body code {
+    font-family: 'JetBrains Mono', Consolas, Menlo, monospace;
+    font-size: 0.85em;
+    background: rgba(0, 0, 0, 0.07);
+    padding: 0.1em 0.4em;
+    border-radius: 0.2em;
+    color: inherit;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.modal-layer .markdown-body pre {
+    background: #d4d4d4;
+    color: #444;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 0.4em;
+    padding: 0.6em 0.75em;
+    overflow-x: auto;
+    margin: 0.5em 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    font-size: 0.85em;
+}
+.modal-layer .markdown-body pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+}
+
+.modal-layer .markdown-body blockquote {
+    border-left: 0.2em solid #fff100;
+    padding: 0.3em 1em;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 0 0.3em 0.3em 0;
+    margin: 0.8em 0;
+    color: #555;
+}
+
+.modal-layer .markdown-body hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 1.5em 0;
+}
+.modal-layer .markdown-body img { max-width: 100%; border-radius: 0.3em; }
+.modal-layer .markdown-body table {
+    border-collapse: collapse;
+    margin: 0.8em 0;
+    width: 100%;
+    font-size: 0.9em;
+}
+.modal-layer .markdown-body th,
+.modal-layer .markdown-body td {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 0.4em 0.8em;
+    text-align: left;
+}
+.modal-layer .markdown-body th { background: rgba(0, 0, 0, 0.05); color: #222; }
+
+.modal-layer .error {
+    color: #c33;
+    text-align: center;
+    padding: 3em 1em;
+    font-size: 0.9em;
+    white-space: normal;
+    margin: 0;
+}
+
+.modal-layer .markdown-body .thanks {
+    margin-top: 1.5em;
+    padding-top: 0.8em;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    color: #888;
+    font-size: 0.9em;
+    text-align: right;
+}

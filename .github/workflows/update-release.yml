@@ -9,7 +9,7 @@ permissions:
 
 env:
   # ===== 排除名单：这些文件夹不会被追踪/打包 =====
-  EXCLUDE: ".github .git Stella-of-the-End BH3-Visual-Novels"
+  EXCLUDE: ".github .git .assets Stella-of-the-End BH3-Visual-Novels"
   # Release 名称与说明
   RELEASE_NAME: "独立网页下载"
   RELEASE_BODY: |
