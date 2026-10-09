@@ -95,6 +95,8 @@
 
 	function openModal() {
 		if (closing) return;
+		window.playSfx("click");
+		window.playSfx("openModal");
 		clearTimeout(animTimer);
 
 		layer.style.display = "";
@@ -119,6 +121,8 @@
 	function closeModal() {
 		if (closing) return;
 		if (layer.style.display === "none") return;
+		window.playSfx("close");
+		window.playSfx("closeModal");
 		closing = true;
 		clearTimeout(animTimer);
 

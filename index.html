@@ -696,9 +696,27 @@
 			    to   { height: 100%; opacity: 1; }
 			}
 
+			@keyframes fadeInShadow {
+			    from {
+			        box-shadow:
+			            calc(0.12 * var(--cm)) calc(0.12 * var(--cm)) calc(0.3 * var(--cm)) rgba(0, 0, 0, 0),
+			            calc(-0.2 * var(--cm)) 0 calc(0.35 * var(--cm)) rgba(0, 0, 0, 0),
+			            calc(-0.05 * var(--cm)) 0 calc(0.1 * var(--cm)) rgba(0, 0, 0, 0);
+			    }
+			    to {
+			        box-shadow:
+			            calc(0.12 * var(--cm)) calc(0.12 * var(--cm)) calc(0.3 * var(--cm)) rgba(0, 0, 0, 0.8),
+			            calc(-0.2 * var(--cm)) 0 calc(0.35 * var(--cm)) rgba(0, 0, 0, 0.75),
+			            calc(-0.05 * var(--cm)) 0 calc(0.1 * var(--cm)) rgba(0, 0, 0, 0.9);
+			    }
+			}
+
+			.project-card.entering.active {
+			    animation: fadeInShadow 0.4s ease-out 0.25s both;
+			}
+
 			.project-card.entering {
 			    background: transparent;
-			    box-shadow: none;
 			}
 			.project-card.entering .slide-rect {
 			    animation: slideInRect 0.25s ease-out 0s both;
@@ -827,7 +845,7 @@
 			    {
 			        label: "循着寒风的箭矢", en: "Arrow on the Cold Wind",
 			        game: "明日方舟：终末地",
-			        color: "#ebdc73",
+			        color: "#a47ebc",
 			        desc: "森空岛上的终末地网页小游戏，部分支持多语言，内置修改面板。\n在寒雾弥漫的雪境深林中，巫术造物们不会放过外来者。游荡着的树傀带着愤怒涌来，但提弗洛斯的弓与箭矢可不允许它们放肆。聆听寒风的行迹吧，管理员。为提弗洛斯的箭矢选好方向，让它在风中穿行起舞……然后，再为雪林带来长久的平静。",
 			        preview: ".assets/ef-acw-pv.png", main: ".assets/ef-acw-bg.png",
 			        link: "./EF-Arrow-on-the-Cold-Wind/frostwind-arrow.html"
@@ -875,6 +893,35 @@
 			    }
 			];
 
+			const SFX = {
+			    selectCard: ".assets/tab_click.mp3",
+			    switchCard: ".assets/tab_task_active.mp3",
+			    click: ".assets/click.mp3",
+			    close: ".assets/close.mp3",
+			    openModal:  ".assets/modal_open.mp3",
+			    closeModal: ".assets/modal_close.mp3"
+			};
+
+			const SFX_CACHE = {};
+			Object.entries(SFX).forEach(([key, src]) => {
+			    if (!src) return;
+			    const audio = new Audio();
+			    audio.src = src;
+			    audio.preload = "auto";
+			    SFX_CACHE[key] = audio;
+			});
+
+			function playSfx(key, delay = 0) {
+			    const base = SFX_CACHE[key];
+			    if (!base) return;
+			    setTimeout(() => {
+			        const a = base.cloneNode();
+			        a.volume = 0.5;
+			        a.play().catch(() => {});
+			    }, delay);
+			}
+			window.playSfx = playSfx;
+
 			const listEl = document.getElementById("projectList");
 			const bgImageEl = document.getElementById("bgImage");
 			const mainTitleEl = document.getElementById("mainTitle");
@@ -882,6 +929,17 @@
 			const mainDescEl = document.getElementById("mainDesc");
 			const enterBtnEl = document.getElementById("enterBtn");
 			let currentIndex = -1;
+
+			enterBtnEl.addEventListener("click", (e) => {
+			    if (enterBtnEl.classList.contains("disabled")) return;
+			
+			    e.preventDefault();
+			    playSfx("click");
+			
+			    setTimeout(() => {
+			        window.location.href = enterBtnEl.href;
+			    }, 144);
+			});
 
 			const WHITE_SVG = "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 10%22%3E%3Crect width=%22200%22 height=%2210%22 fill=%22white%22/%3E%3C/svg%3E";
 
@@ -932,7 +990,9 @@
 			}
 
 			function selectProject(index) {
+			    playSfx("selectCard");
 			    if (index === currentIndex) return;
+			    playSfx("switchCard", 150);
 			    currentIndex = index;
 			    const proj = PROJECTS[index];
 
