@@ -1033,10 +1033,7 @@
 
 			    tasks.push(loadText("./README.md"));
 
-			    await Promise.race([
-			        Promise.all(tasks),
-			        new Promise(r => setTimeout(r, 30000))
-			    ]);
+			    await Promise.all(tasks);
 			}
 
 			function renderList() {
