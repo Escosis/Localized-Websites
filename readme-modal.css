@@ -154,6 +154,8 @@
     line-height: 1.5;
     color: #444;
     word-break: break-word;
+    -webkit-user-select: text;
+    user-select: text;  
 }
 
 .modal-layer .markdown-body h1,
