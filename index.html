@@ -7,7 +7,7 @@
 			网页档案馆 Localized Websites
 		</title>
 		<link rel="icon" href=".assets/icon.png">
-		<style>
+		<style id="font-style">
 			@font-face {
 			    font-family: 'HarmonyOS Sans';
 			    src: url('.assets/HarmonyOS_Sans_SC_Medium.woff2') format('woff2');
@@ -15,6 +15,8 @@
 			    font-style: normal;
 			    font-display: swap;
 			}
+		</style>
+		<style>
 			        * { margin: 0; padding: 0; box-sizing: border-box; }
 
 			        html, body {
@@ -232,7 +234,7 @@
 			    display: block;
 			    padding: 0;
 			    align-items: center;
-			    background-image: url(.assets/primary_btn_texture.png);
+			    background-image: var(--btn-texture, url(.assets/primary_btn_texture.png));
 			    background-position: 100%;
 			    background-repeat: no-repeat;
 			    background-size: auto 100%;
@@ -741,8 +743,10 @@
 			    background: #000;
 			    z-index: 9999;
 			    display: flex;
+			    flex-direction: column;
 			    align-items: center;
 			    justify-content: center;
+			    gap: 2rem;
 			    opacity: 1;
 			    transition: opacity 0.4s ease;
 			}
@@ -764,13 +768,31 @@
 			@keyframes spin {
 			    to { transform: rotate(360deg); }
 			}
+
+			.proxy-btn {
+			    background: rgba(255, 255, 255, 0.08);
+			    border: 1px solid rgba(255, 255, 255, 0.25);
+			    color: #d8d8d8;
+			    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+			    font-size: calc(0.4 * var(--cm));
+			    padding: 0.6em 1.8em;
+			    border-radius: 999rem;
+			    cursor: pointer;
+			    transition: all 0.2s ease;
+			    letter-spacing: 0.05em;
+			}
+			.proxy-btn:hover {
+			    background: rgba(255, 255, 255, 0.18);
+			    border-color: rgba(255, 255, 255, 0.5);
+			    color: #fff;
+			}
 		</style>
 		<link rel="stylesheet" href="readme-modal.css">
 	</head>
 	<body>
 		<div class="loading-screen" id="loadingScreen">
-			<div class="loading-spinner">
-			</div>
+			<div class="loading-spinner"></div>
+			<button class="proxy-btn" id="proxyBtn">使用代理加速</button>
 		</div>
 		<div class="app-container">
 			<main class="main-content">
@@ -858,6 +880,22 @@
 			</div>
 		</div>
 		<script>
+
+			const REPO = 'Escosis/Localized-Websites';
+			const BRANCH = 'main';
+			const PROXY_BASE = 'https://gh-proxy.com/';
+			const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/`;
+			const useProxy = new URLSearchParams(location.search).has('proxy');
+			window.__USE_PROXY__ = useProxy;
+			window.__PROXY_BASE__ = PROXY_BASE;
+			window.__RAW_BASE__ = RAW_BASE;
+
+			function getProxyUrl(path) {
+			    const clean = path.replace(/^\.\//, '');
+			    return PROXY_BASE + RAW_BASE + clean;
+			}
+			window.getProxyUrl = getProxyUrl;
+
 			const PROJECTS = [
 			    {
 			        label: "融合！山团团！", en: "OrbiPom! Merge!",
@@ -934,14 +972,81 @@
 			    closeModal: ".assets/modal_close.mp3"
 			};
 
+			if (useProxy) {
+			    PROJECTS.forEach(p => {
+			        if (p.preview) p.preview = getProxyUrl(p.preview);
+			        if (p.main) p.main = getProxyUrl(p.main);
+			    });
+			    for (const key of Object.keys(SFX)) {
+			        if (SFX[key]) SFX[key] = getProxyUrl(SFX[key]);
+			    }
+			    document.documentElement.style.setProperty(
+			        '--btn-texture',
+			        `url(${getProxyUrl('.assets/primary_btn_texture.png')})`
+			    );
+			    const oldFontStyle = document.getElementById('font-style');
+			    if (oldFontStyle) oldFontStyle.remove();
+			    const newFontStyle = document.createElement('style');
+			    newFontStyle.textContent = `
+			        @font-face {
+			            font-family: 'HarmonyOS Sans';
+			            src: url('${getProxyUrl('.assets/HarmonyOS_Sans_SC_Medium.woff2')}') format('woff2');
+			            font-weight: 400 700;
+			            font-style: normal;
+			            font-display: swap;
+			        }
+			    `;
+			    document.head.appendChild(newFontStyle);
+			    const iconLink = document.querySelector('link[rel="icon"]');
+			    if (iconLink) iconLink.href = getProxyUrl('.assets/icon.png');
+			}
+
+			const proxyBtn = document.getElementById("proxyBtn");
+			if (useProxy) {
+			    proxyBtn.textContent = "关闭代理加速";
+			    proxyBtn.classList.add("active");
+			    proxyBtn.addEventListener("click", () => {
+			        proxyBtn.textContent = "正在关闭…";
+			        proxyBtn.disabled = true;
+			        const u = new URL(location.href);
+			        u.searchParams.delete('proxy');
+			        location.replace(u.href);
+			    });
+			} else {
+			    proxyBtn.addEventListener("click", () => {
+			        proxyBtn.textContent = "正在启用…";
+			        proxyBtn.disabled = true;
+			        const u = new URL(location.href);
+			        u.searchParams.set('proxy', '1');
+			        location.replace(u.href);
+			    });
+			}
+
 			const SFX_CACHE = {};
-			Object.entries(SFX).forEach(([key, src]) => {
+
+			async function loadAudioToBlob(key, src) {
 			    if (!src) return;
+			    let finalSrc = src;
+			    try {
+			        const res = await fetch(src, { cache: "force-cache" });
+			        if (res.ok) {
+			            const blob = await res.blob();
+			            finalSrc = URL.createObjectURL(blob);
+			        }
+			    } catch (e) {}
 			    const audio = new Audio();
-			    audio.src = src;
+			    audio.src = finalSrc;
 			    audio.preload = "auto";
 			    SFX_CACHE[key] = audio;
-			});
+			}
+
+			function loadAllAudio() {
+			    return Promise.all(
+			        Object.entries(SFX)
+			            .filter(([, src]) => !!src)
+			            .map(([key, src]) => loadAudioToBlob(key, src))
+			    );
+			}
 
 			function playSfx(key, delay = 0) {
 			    const base = SFX_CACHE[key];
@@ -964,10 +1069,8 @@
 
 			enterBtnEl.addEventListener("click", (e) => {
 			    if (enterBtnEl.classList.contains("disabled")) return;
-
 			    e.preventDefault();
 			    playSfx("click");
-
 			    setTimeout(() => {
 			        window.location.href = enterBtnEl.href;
 			    }, 144);
@@ -985,26 +1088,9 @@
 			    });
 			}
 
-			function waitAudio(audio) {
-			    return new Promise(resolve => {
-			        if (!audio) return resolve();
-			        if (audio.readyState >= 2) return resolve();
-			        const done = () => resolve();
-			        audio.addEventListener("loadeddata", done, { once: true });
-			        audio.addEventListener("error", done, { once: true });
-			        setTimeout(done, 8000);
-			    });
-			}
-
 			function loadFont(family) {
 			    if (!document.fonts || !document.fonts.load) return Promise.resolve();
 			    return document.fonts.load(`16px "${family}"`, "网页档案馆").catch(() => {});
-			}
-
-			function loadText(url) {
-			    return fetch(url, { cache: "no-cache" })
-			        .then(r => r.ok ? r.text() : null)
-			        .catch(() => null);
 			}
 
 			async function preloadAll() {
@@ -1015,23 +1101,39 @@
 			            loadImage(proj.preview).then(ok => { proj._previewOk = ok; })
 			        );
 			        if (proj.main) {
-			            tasks.push(loadImage(proj.main));
+			            tasks.push(new Promise(resolve => {
+			                const img = new Image();
+			                proj._mainImg = img;
+			                img.onload = () => resolve(true);
+			                img.onerror = () => resolve(false);
+			                img.src = proj.main;
+			            }));
 			        }
 			    }
 
-			    [
+			    const extraImages = [
 			        ".assets/icon.png",
 			        ".assets/primary_btn_texture.png",
 			        ".assets/deco_points.png",
 			        ".assets/deco_1.png",
 			        ".assets/close.svg"
-			    ].forEach(src => tasks.push(loadImage(src)));
+			    ];
+			    extraImages.forEach(src => {
+			        tasks.push(loadImage(useProxy ? getProxyUrl(src) : src));
+			    });
 
 			    tasks.push(loadFont("HarmonyOS Sans"));
 
-			    Object.values(SFX_CACHE).forEach(a => tasks.push(waitAudio(a)));
+			    tasks.push(loadAllAudio());
 
-			    tasks.push(loadText("./README.md"));
+			    const readmeUrl = useProxy ? getProxyUrl("README.md") : "./README.md";
+			    window.__README_TEXT__ = null;
+			    tasks.push(
+			        fetch(readmeUrl, { cache: "no-cache" })
+			            .then(r => r.ok ? r.text() : null)
+			            .then(text => { window.__README_TEXT__ = text; })
+			            .catch(() => { window.__README_TEXT__ = null; })
+			    );
 
 			    await Promise.all(tasks);
 			}
@@ -1077,8 +1179,8 @@
 			    });
 
 			    const nextSrc = proj.main;
-			    const loader = new Image();
-			    loader.onload = () => {
+
+			    function doSwitchBg() {
 			        bgImageEl.style.transition = "none";
 			        bgImageEl.style.transform = "scale(2)";
 			        bgImageEl.src = nextSrc;
@@ -1088,12 +1190,19 @@
 			                bgImageEl.style.transform = "scale(1)";
 			            });
 			        });
-			    };
-			    loader.onerror = () => {
-			        bgImageEl.style.opacity = 0;
-			        bgImageEl.src = "";
-			    };
-			    loader.src = nextSrc;
+			    }
+
+			    if (proj._mainImg && proj._mainImg.complete && proj._mainImg.naturalWidth > 0) {
+			        doSwitchBg();
+			    } else {
+			        const loader = new Image();
+			        loader.onload = doSwitchBg;
+			        loader.onerror = () => {
+			            bgImageEl.style.opacity = 0;
+			            bgImageEl.src = "";
+			        };
+			        loader.src = nextSrc;
+			    }
 
 			    mainTitleEl.textContent = proj.label;
 			    enBoxEl.textContent = proj.en;
@@ -1120,16 +1229,16 @@
 			}
 
 			preloadAll().then(() => {
-			    			renderList();
-			    			selectProject(0);
+			    renderList();
+			    selectProject(0);
 
-			    			requestAnimationFrame(() => {
-			        			requestAnimationFrame(() => {
-			            			const loading = document.getElementById("loadingScreen");
-			            			loading.classList.add("hidden");
-			            			setTimeout(() => loading.remove(), 500);
-			        			});
-			    			});
+			    requestAnimationFrame(() => {
+			        requestAnimationFrame(() => {
+			            const loading = document.getElementById("loadingScreen");
+			            loading.classList.add("hidden");
+			            setTimeout(() => loading.remove(), 500);
+			        });
+			    });
 			});
 		</script>
 		<script src="readme-modal.js">
