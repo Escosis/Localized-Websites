@@ -21,11 +21,22 @@
 			return Promise.resolve();
 		}
 		if (ensureMarked._p) return ensureMarked._p;
+
+		const localSrc = (window.__USE_PROXY__ && typeof window.getProxyUrl === "function")
+			? window.getProxyUrl(".assets/marked.min.js")
+			: ".assets/marked.min.js";
+
 		ensureMarked._p = new Promise((resolve, reject) => {
 			const s = document.createElement("script");
-			s.src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+			s.src = localSrc;
 			s.onload = () => resolve();
-			s.onerror = () => reject(new Error("marked.js 加载失败"));
+			s.onerror = () => {
+				const fb = document.createElement("script");
+				fb.src = "https://cdn.jsdelivr.net/npm/marked/marked.min.js";
+				fb.onload = () => resolve();
+				fb.onerror = () => reject(new Error("marked.js 加载失败"));
+				document.head.appendChild(fb);
+			};
 			document.head.appendChild(s);
 		});
 		return ensureMarked._p;
@@ -53,70 +64,59 @@
 	scrollEl.addEventListener("scroll", updateThumb);
 	window.addEventListener("resize", updateThumb);
 
+	function renderReadme(text) {
+		let html;
+		if (window.marked && typeof window.marked.parse === "function") {
+			html = window.marked.parse(text);
+		} else {
+			html = "<pre style='white-space:pre-wrap;'>" +
+				text.replace(/[&<>]/g, c => ({
+					"&": "&amp;",
+					"<": "&lt;",
+					">": "&gt;"
+				}[c])) +
+				"</pre>";
+		}
+		html += '<p class="thanks">致谢：明日方舟：终末地“活动中心”界面 UI</p>';
+		modalBody.innerHTML = html;
+	}
+
 	function loadReadme() {
-	    if (readmeLoaded) return Promise.resolve();
-	    if (readmeLoading) return readmeLoading;
-	
-	    // ① 优先使用主页面预加载的结果
-	    if (typeof window.__README_TEXT__ === "string" && window.__README_TEXT__) {
-	        const text = window.__README_TEXT__;
-	        return ensureMarked().then(() => {
-	            let html;
-	            if (window.marked && typeof window.marked.parse === "function") {
-	                html = window.marked.parse(text);
-	            } else {
-	                html = "<pre style='white-space:pre-wrap;'>" +
-	                    text.replace(/[&<>]/g, c => ({
-	                        "&": "&amp;",
-	                        "<": "&lt;",
-	                        ">": "&gt;"
-	                    }[c])) +
-	                    "</pre>";
-	            }
-	            html += '<p class="thanks">致谢：明日方舟：终末地“活动中心”界面 UI</p>';
-	            modalBody.innerHTML = html;
-	            readmeLoaded = true;
-	        });
-	    }
-	
-	    // ② 兜底：预加载失败时自己 fetch（代理模式下走代理 URL）
-	    const readmeUrl = (window.__USE_PROXY__ && typeof window.getProxyUrl === "function")
-	        ? window.getProxyUrl("README.md")
-	        : "./README.md";
-	
-	    readmeLoading = ensureMarked()
-	        .then(() => fetch(readmeUrl, { cache: "no-cache" }))
-	        .then(res => {
-	            if (!res.ok) throw new Error("HTTP " + res.status);
-	            return res.text();
-	        })
-	        .then(text => {
-	            let html;
-	            if (window.marked && typeof window.marked.parse === "function") {
-	                html = window.marked.parse(text);
-	            } else {
-	                html = "<pre style='white-space:pre-wrap;'>" +
-	                    text.replace(/[&<>]/g, c => ({
-	                        "&": "&amp;",
-	                        "<": "&lt;",
-	                        ">": "&gt;"
-	                    }[c])) +
-	                    "</pre>";
-	            }
-	            html += '<p class="thanks">致谢：明日方舟：终末地“活动中心”界面 UI</p>';
-	            modalBody.innerHTML = html;
-	            window.__README_TEXT__ = text;   // 顺便缓存到全局
-	            readmeLoaded = true;
-	        })
-	        .catch(err => {
-	            modalBody.innerHTML = '<div class="error">无法加载 README.md：' + err.message +
-	                '<br><br>请确认 README.md 与 index.html 在同一目录下，并通过 http 方式访问。</div>';
-	        })
-	        .finally(() => {
-	            readmeLoading = null;
-	        });
-	
-	    return readmeLoading;
+		if (readmeLoaded) return Promise.resolve();
+		if (readmeLoading) return readmeLoading;
+
+		if (typeof window.__README_TEXT__ === "string" && window.__README_TEXT__) {
+			const text = window.__README_TEXT__;
+			readmeLoaded = true;
+			return ensureMarked().then(() => {
+				renderReadme(text);
+			});
+		}
+
+		const readmeUrl = (window.__USE_PROXY__ && typeof window.getProxyUrl === "function")
+			? window.getProxyUrl("README.md")
+			: "./README.md";
+
+		readmeLoading = ensureMarked()
+			.then(() => fetch(readmeUrl, { cache: "no-cache" }))
+			.then(res => {
+				if (!res.ok) throw new Error("HTTP " + res.status);
+				return res.text();
+			})
+			.then(text => {
+				renderReadme(text);
+				window.__README_TEXT__ = text;   // 缓存到全局
+				readmeLoaded = true;
+			})
+			.catch(err => {
+				modalBody.innerHTML = '<div class="error">无法加载 README.md：' + err.message +
+					'<br><br>请确认 README.md 与 index.html 在同一目录下，并通过 http 方式访问。</div>';
+			})
+			.finally(() => {
+				readmeLoading = null;
+			});
+
+		return readmeLoading;
 	}
 
 	function openModal() {
@@ -175,4 +175,5 @@
 
 	window.openReadmeModal = openModal;
 	window.closeReadmeModal = closeModal;
+	window.__loadReadme__ = loadReadme;
 })();

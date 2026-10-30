@@ -1239,6 +1239,10 @@
 			            setTimeout(() => loading.remove(), 500);
 			        });
 			    });
+
+			    if (typeof window.__loadReadme__ === "function") {
+			        window.__loadReadme__();
+			    }
 			});
 		</script>
 		<script src="readme-modal.js">
